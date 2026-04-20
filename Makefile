@@ -53,7 +53,7 @@ debug-discovery:
 	@echo "VALIDATE_TARGETS:       $(VALIDATE_TARGETS)"
 
 # Audit benchmark-defs templates: DTD validation, model verdicts, participation table
-debug-templates:
+debug-templates: benchexec
 	@python3 ./audit_templates.py benchmark-defs
 
 ############# Packaging the artifact

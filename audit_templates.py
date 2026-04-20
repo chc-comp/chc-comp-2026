@@ -18,18 +18,46 @@ import xml.etree.ElementTree as ET
 from collections import defaultdict
 
 
-def validate_dtd(template_dir):
+def validate_dtd(template_dir, dtd_path):
     """Validate every .xml.template against its declared DTD using xmllint."""
     errors = []
     templates = sorted(glob.glob(os.path.join(template_dir, '*.xml.template')))
     for path in templates:
         name = os.path.basename(path)
         result = subprocess.run(
-            ['xmllint', '--valid', '--noout', path],
+            ['xmllint', '--noout', '--dtdvalid', dtd_path, path],
             capture_output=True, text=True
         )
         if result.returncode != 0:
             errors.append((name, result.stderr.strip()))
+    return errors
+
+
+EXPECTED_LIMITS = {
+    'timelimit': '30 min',
+    'hardtimelimit': '30 min',
+    'cpuCores': '8',
+    'memlimit': '30 GB',
+}
+
+
+def check_resource_limits(template_dir):
+    """Check that all verifier templates have the expected resource limits."""
+    errors = []
+    for path in sorted(glob.glob(
+            os.path.join(template_dir, '*.xml.template'))):
+        name = os.path.basename(path)
+        if name.endswith('-validation.xml.template'):
+            continue
+        tree = ET.parse(path)
+        root = tree.getroot()
+        for attr, expected in EXPECTED_LIMITS.items():
+            actual = root.get(attr)
+            if actual != expected:
+                errors.append((
+                    name,
+                    f'{attr}="{actual}" (expected "{expected}")'
+                ))
     return errors
 
 
@@ -150,21 +178,39 @@ def build_participation_table(template_dir):
     return '\n'.join(lines)
 
 
+DEFAULT_DTD = os.path.join('benchexec', 'doc', 'benchmark.dtd')
+
+
 def main():
     template_dir = sys.argv[1] if len(sys.argv) > 1 else 'benchmark-defs'
+    dtd_path = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_DTD
     has_errors = False
 
     # 1. DTD validation
     print('## DTD Validation\n')
-    dtd_errors = validate_dtd(template_dir)
-    if dtd_errors:
-        has_errors = True
-        for name, err in dtd_errors:
-            print(f'**FAIL** `{name}`:\n```\n{err}\n```\n')
+    if not os.path.isfile(dtd_path):
+        print(f'**SKIP** DTD file not found: `{dtd_path}`\n')
     else:
-        print('All templates pass DTD validation.\n')
+        dtd_errors = validate_dtd(template_dir, dtd_path)
+        if dtd_errors:
+            has_errors = True
+            for name, err in dtd_errors:
+                print(f'**FAIL** `{name}`:\n```\n{err}\n```\n')
+        else:
+            print('All templates pass DTD validation.\n')
 
-    # 2. Model expectedverdict check
+    # 2. Resource limits check
+    print('## Resource Limits Check\n')
+    limit_errors = check_resource_limits(template_dir)
+    if limit_errors:
+        has_errors = True
+        for name, msg in limit_errors:
+            print(f'- **FAIL** `{name}`: {msg}')
+        print()
+    else:
+        print('All verifier templates have correct resource limits.\n')
+
+    # 3. Model expectedverdict check
     print('## Model Template expectedverdict Check\n')
     verdict_errors = check_model_expected_verdicts(template_dir)
     if verdict_errors:
@@ -176,7 +222,7 @@ def main():
         print('All model templates have `expectedverdict="true"` on every '
               '`<propertyfile>`.\n')
 
-    # 3. Participation table
+    # 4. Participation table
     print('## Tool Participation\n')
     print(build_participation_table(template_dir))
     print()
