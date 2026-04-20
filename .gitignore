@@ -1,0 +1,15 @@
+tools
+sv-benchmarks
+chc-comp25-benchmarks*
+benchexec
+results
+.idea
+.vscode
+experiment-*
+benchmark-defs/*.xml
+!witnesses/transver-*
+witnesses/*
+*.xml
+**/__pycache__
+data-analysis/cache
+.venv

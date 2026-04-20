@@ -1,0 +1,70 @@
+name: Audit Templates
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Run debug-discovery
+        id: discovery
+        run: |
+          {
+            echo 'output<<EOF'
+            make debug-discovery
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run debug-templates
+        id: templates
+        run: |
+          {
+            echo 'output<<EOF'
+            make debug-templates
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Download tools
+        id: download
+        run: |
+          {
+            echo 'output<<EOF'
+            if make download-tools 2>&1; then
+              echo "All tools downloaded successfully."
+            else
+              echo "ERROR: Some tools failed to download."
+            fi
+            echo ""
+            echo "Contents of tools/:"
+            find tools -maxdepth 2 -type f | sort
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## Discovery
+
+            ```
+            ${{ steps.discovery.outputs.output }}
+            ```
+
+            ${{ steps.templates.outputs.output }}
+
+            ## Tool Downloads
+
+            ```
+            ${{ steps.download.outputs.output }}
+            ```

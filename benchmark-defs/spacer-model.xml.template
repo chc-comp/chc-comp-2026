@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE benchmark PUBLIC "+//IDN sosy-lab.org//DTD BenchExec benchmark 1.9//EN" "https://www.sosy-lab.org/benchexec/benchmark-2.3.dtd">
+<benchmark tool="spacer" timelimit="30 min" hardtimelimit="30 min" memlimit="30 GB" cpuCores="8">
+
+
+
+<option>-model</option>
+
+<rundefinition name="CHC-COMP2025_check-sat">
+  <tasks name="BV">
+    <includesfile>../chc-comp25-benchmarks/BV.set</includesfile>
+    <propertyfile expectedverdict="true">../chc-comp25-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="LRA-Lin">
+    <includesfile>../chc-comp25-benchmarks/LRA-Lin.set</includesfile>
+    <propertyfile expectedverdict="true">../chc-comp25-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+  
+  <tasks name="LIA-Lin">
+    <includesfile>../chc-comp25-benchmarks/LIA-Lin.set</includesfile>
+    <propertyfile expectedverdict="true">../chc-comp25-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="LIA">
+    <includesfile>../chc-comp25-benchmarks/LIA.set</includesfile>
+    <propertyfile expectedverdict="true">../chc-comp25-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="LIA-Arrays">
+    <includesfile>../chc-comp25-benchmarks/LIA-Arrays.set</includesfile>
+    <propertyfile expectedverdict="true">../chc-comp25-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="LIA-Lin-Arrays">
+    <includesfile>../chc-comp25-benchmarks/LIA-Lin-Arrays.set</includesfile>
+    <propertyfile expectedverdict="true">../chc-comp25-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="ADT-LIA">
+    <includesfile>../chc-comp25-benchmarks/ADT-LIA.set</includesfile>
+    <propertyfile expectedverdict="true">../chc-comp25-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="ADT-LIA-Arrays">
+    <includesfile>../chc-comp25-benchmarks/ADT-LIA-Arrays.set</includesfile>
+    <propertyfile expectedverdict="true">../chc-comp25-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+</rundefinition>
+
+</benchmark>

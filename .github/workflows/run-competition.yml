@@ -1,0 +1,83 @@
+name: Run CHC-COMP (smoke test)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Python dependencies
+        run: python3 -m pip install --upgrade pip pyyaml
+
+      - name: Setup user namespaces
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Download all dependencies
+        run: make download-all
+
+      - name: Configure benchmark environment
+        run: source benchmark-utils/ci_config.sh
+
+      - name: Set up test benchmark suite
+        run: |
+          source benchmark-utils/ci_config.sh
+          make setup-test
+
+      - name: Run all verifiers
+        run: |
+          source benchmark-utils/ci_config.sh
+          make verify-all
+
+      - name: Process models
+        run: |
+          source benchmark-utils/ci_config.sh
+          make process-all-models
+
+      - name: Validate all models
+        run: |
+          source benchmark-utils/ci_config.sh
+          make validate-all
+
+      - name: Generate result tables
+        run: |
+          source benchmark-utils/ci_config.sh
+          make process-results
+
+      - name: Upload tables to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: results/pages
+
+  deploy:
+    needs: run
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
