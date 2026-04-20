@@ -40,6 +40,7 @@ jobs:
       - name: Download tools
         id: download
         run: |
+          tree tools -L 2
           if make download-tools -j4 2>&1; then
             echo "All tools downloaded successfully."
           else
@@ -47,7 +48,7 @@ jobs:
           fi
           {
             echo 'output<<EOF'
-            tree tools -L2
+            tree tools -L 2
             echo 'EOF'
           } | tee -a "$GITHUB_OUTPUT"
 
