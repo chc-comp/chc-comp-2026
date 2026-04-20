@@ -24,7 +24,7 @@ jobs:
           python-version: "3.x"
 
       - name: Install Python dependencies
-        run: python3 -m pip install --upgrade pip pyyaml
+        run: python3 -m pip install --upgrade pip pyyaml ply
 
       - name: Setup user namespaces
         run: |
