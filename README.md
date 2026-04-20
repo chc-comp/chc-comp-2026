@@ -21,8 +21,8 @@ To add a new verifier, do the following three things:
    Make target that downloads and unpacks the tool into `tools/TOOL`. Then add
    `$(TOOLS_DIRECTORY)/TOOL` to the `download-tools` prerequisite list.
 
-   > [!CAUTION]
-   > All submitted tools must be publicly available and include a LICENSE file that permits unrestricted evaluation by any party. The license must not impose any limitations on the use, distribution, or analysis of the tool’s outputs, including but not limited to log files, generated models, or intermediate results. The tool archive should be ideally hosted on a long-term archival site such as Zenodo, but this is not a requirement.
+> [!CAUTION]
+> All submitted tools must be publicly available and include a LICENSE file that permits unrestricted evaluation by any party. The license must not impose any limitations on the use, distribution, or analysis of the tool’s outputs, including but not limited to log files, generated models, or intermediate results. The tool archive should be ideally hosted on a long-term archival site such as Zenodo, but this is not a requirement.
 
 2. **Add a benchmark definition.** Create the appropriate `.xml.template` file in
    `benchmark-defs/` following one of the naming conventions above. Copy an [existing
