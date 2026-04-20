@@ -84,9 +84,9 @@ def find_table_html(tables_dir, name, prefer_multi=False):
 def discover_categories(results_dir):
     """Discover all benchmark categories from XML result files."""
     categories = set()
-    for f in glob.glob(os.path.join(results_dir, '*results.CHC-COMP2025_check-sat.*.xml')):
+    for f in glob.glob(os.path.join(results_dir, '*results.CHC-COMP2026_check-sat.*.xml')):
         basename = os.path.basename(f)
-        parts = basename.split('.CHC-COMP2025_check-sat.')
+        parts = basename.split('.CHC-COMP2026_check-sat.')
         if len(parts) == 2:
             cat = parts[1].replace('.xml', '')
             if cat:
@@ -100,13 +100,13 @@ def get_tool_categories(results_dir, tool_basename, is_model=False):
         prefix = f'{tool_basename}-model.'
     else:
         prefix = f'{tool_basename}.'
-    pattern = f'{prefix}*results.CHC-COMP2025_check-sat.*.xml'
+    pattern = f'{prefix}*results.CHC-COMP2026_check-sat.*.xml'
     categories = set()
     for f in glob.glob(os.path.join(results_dir, pattern)):
         basename = os.path.basename(f)
         if not basename.startswith(prefix):
             continue
-        parts = basename.split('.CHC-COMP2025_check-sat.')
+        parts = basename.split('.CHC-COMP2026_check-sat.')
         if len(parts) == 2:
             cat = parts[1].replace('.xml', '')
             if cat:
@@ -120,20 +120,20 @@ def get_result_xml(results_dir, tool_basename, category, is_model=False):
         # Use fixed (validated) results if available
         fixed = os.path.join(
             results_dir,
-            f'{tool_basename}-fixed.results.CHC-COMP2025_check-sat.{category}.xml'
+            f'{tool_basename}-fixed.results.CHC-COMP2026_check-sat.{category}.xml'
         )
         if os.path.exists(fixed):
             return fixed
         # Fall back to raw model results
         return find_latest_xml(
             results_dir,
-            f'{tool_basename}-model.*results.CHC-COMP2025_check-sat.{category}.xml',
+            f'{tool_basename}-model.*results.CHC-COMP2026_check-sat.{category}.xml',
             tool_prefix=f'{tool_basename}-model.'
         )
     else:
         return find_latest_xml(
             results_dir,
-            f'{tool_basename}.*results.CHC-COMP2025_check-sat.{category}.xml',
+            f'{tool_basename}.*results.CHC-COMP2026_check-sat.{category}.xml',
             tool_prefix=f'{tool_basename}.'
         )
 
@@ -143,19 +143,19 @@ def get_overall_xml(results_dir, tool_basename, is_model=False):
     if is_model:
         fixed = os.path.join(
             results_dir,
-            f'{tool_basename}-fixed.results.CHC-COMP2025_check-sat.xml'
+            f'{tool_basename}-fixed.results.CHC-COMP2026_check-sat.xml'
         )
         if os.path.exists(fixed):
             return fixed
         return find_latest_xml(
             results_dir,
-            f'{tool_basename}-model.*results.CHC-COMP2025_check-sat.xml',
+            f'{tool_basename}-model.*results.CHC-COMP2026_check-sat.xml',
             tool_prefix=f'{tool_basename}-model.'
         )
     else:
         return find_latest_xml(
             results_dir,
-            f'{tool_basename}.*results.CHC-COMP2025_check-sat.xml',
+            f'{tool_basename}.*results.CHC-COMP2026_check-sat.xml',
             tool_prefix=f'{tool_basename}.'
         )
 

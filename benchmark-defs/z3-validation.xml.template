@@ -3,7 +3,7 @@
 <benchmark tool="chc-model-validate" displayName="z3" timelimit="90 s" hardtimelimit="96 s" memlimit="7 GB" cpuCores="2">
     
 
-<rundefinition name="CHC-COMP2025_check-sat">
+<rundefinition name="CHC-COMP2026_check-sat">
     <requiredfiles>../||MODELS-DIR||</requiredfiles>
     <option name="../||MODELS-DIR||"/>
 

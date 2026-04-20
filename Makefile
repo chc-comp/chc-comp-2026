@@ -222,18 +222,18 @@ clean-tables:
 # Model verifiers: validate with validate.py, then generate per-verifier tables
 model-verifier-tables:
 	@for model_verifier in $(MODEL_VERIFIERS); do \
-		verifier_any=$$(ls results/$${model_verifier}-model.*results.CHC-COMP2025_check-sat.*.xml 2>/dev/null | sort -V | tail -n 1); \
+		verifier_any=$$(ls results/$${model_verifier}-model.*results.CHC-COMP2026_check-sat.*.xml 2>/dev/null | sort -V | tail -n 1); \
 		if [ -n "$$verifier_any" ]; then \
 			base=$$(echo "$$verifier_any" | sed 's/\.results\..*//'); \
 			ln -sfn "$$(basename $$base).logfiles" "results/$${model_verifier}-fixed.logfiles"; \
 		fi; \
-		categories=$$(ls results/$${model_verifier}-model.*results.CHC-COMP2025_check-sat.*.xml 2>/dev/null \
-			| sed 's/.*\.CHC-COMP2025_check-sat\.\(.*\)\.xml/\1/' | sort -u); \
+		categories=$$(ls results/$${model_verifier}-model.*results.CHC-COMP2026_check-sat.*.xml 2>/dev/null \
+			| sed 's/.*\.CHC-COMP2026_check-sat\.\(.*\)\.xml/\1/' | sort -u); \
 		for category in $$categories; do \
-			verifier_latest=$$(ls -d results/$${model_verifier}-model.*results.CHC-COMP2025_check-sat.$${category}.xml 2>/dev/null | sort -V | tail -n 1); \
+			verifier_latest=$$(ls -d results/$${model_verifier}-model.*results.CHC-COMP2026_check-sat.$${category}.xml 2>/dev/null | sort -V | tail -n 1); \
 			validator_args=""; \
 			for validator in $(VALIDATORS); do \
-				val_latest=$$(ls -d results/$${validator}-validate-$${model_verifier}-models.*results.CHC-COMP2025_check-sat.$${category}.xml 2>/dev/null | sort -V | tail -n 1); \
+				val_latest=$$(ls -d results/$${validator}-validate-$${model_verifier}-models.*results.CHC-COMP2026_check-sat.$${category}.xml 2>/dev/null | sort -V | tail -n 1); \
 				[ -n "$$val_latest" ] && validator_args="$$validator_args $$val_latest"; \
 			done; \
 			if [ -z "$$validator_args" ]; then \
@@ -241,22 +241,22 @@ model-verifier-tables:
 				continue; \
 			fi; \
 			echo "Generating table: $${model_verifier} / $${category}"; \
-			python3 ./validate.py -o "results/$${model_verifier}-fixed.results.CHC-COMP2025_check-sat.$${category}.xml" \
+			python3 ./validate.py -o "results/$${model_verifier}-fixed.results.CHC-COMP2026_check-sat.$${category}.xml" \
 				"$$verifier_latest" $$validator_args; \
 			./benchexec/bin/table-generator --no-diff \
 				--name results-$${model_verifier}-model-$${category} \
 				--outputpath results/tables \
-				"results/$${model_verifier}-fixed.results.CHC-COMP2025_check-sat.$${category}.xml" $$validator_args; \
+				"results/$${model_verifier}-fixed.results.CHC-COMP2026_check-sat.$${category}.xml" $$validator_args; \
 		done; \
 	done
 
 # Plain verifiers: generate per-verifier tables directly from results
 plain-verifier-tables:
 	@for plain_verifier in $(PLAIN_VERIFIERS); do \
-		categories=$$(ls results/$${plain_verifier}.*results.CHC-COMP2025_check-sat.*.xml 2>/dev/null \
-			| sed 's/.*\.CHC-COMP2025_check-sat\.\(.*\)\.xml/\1/' | sort -u); \
+		categories=$$(ls results/$${plain_verifier}.*results.CHC-COMP2026_check-sat.*.xml 2>/dev/null \
+			| sed 's/.*\.CHC-COMP2026_check-sat\.\(.*\)\.xml/\1/' | sort -u); \
 		for category in $$categories; do \
-			verifier_latest=$$(ls -d results/$${plain_verifier}.*results.CHC-COMP2025_check-sat.$${category}.xml 2>/dev/null | sort -V | tail -n 1); \
+			verifier_latest=$$(ls -d results/$${plain_verifier}.*results.CHC-COMP2026_check-sat.$${category}.xml 2>/dev/null | sort -V | tail -n 1); \
 			echo "Generating table: $${plain_verifier} / $${category}"; \
 			./benchexec/bin/table-generator --no-diff \
 				--name results-$${plain_verifier}-$${category} \
@@ -268,11 +268,11 @@ plain-verifier-tables:
 # Overall tables for model verifiers (all categories combined)
 model-overall-tables:
 	@for model_verifier in $(MODEL_VERIFIERS); do \
-		verifier_overall=$$(ls -d results/$${model_verifier}-model.*results.CHC-COMP2025_check-sat.xml 2>/dev/null | sort -V | tail -n 1); \
+		verifier_overall=$$(ls -d results/$${model_verifier}-model.*results.CHC-COMP2026_check-sat.xml 2>/dev/null | sort -V | tail -n 1); \
 		if [ -z "$$verifier_overall" ]; then continue; fi; \
 		validator_args=""; \
 		for validator in $(VALIDATORS); do \
-			val_overall=$$(ls -d results/$${validator}-validate-$${model_verifier}-models.*results.CHC-COMP2025_check-sat.xml 2>/dev/null | sort -V | tail -n 1); \
+			val_overall=$$(ls -d results/$${validator}-validate-$${model_verifier}-models.*results.CHC-COMP2026_check-sat.xml 2>/dev/null | sort -V | tail -n 1); \
 			[ -n "$$val_overall" ] && validator_args="$$validator_args $$val_overall"; \
 		done; \
 		if [ -z "$$validator_args" ]; then \
@@ -280,18 +280,18 @@ model-overall-tables:
 			continue; \
 		fi; \
 		echo "Generating overall table: $${model_verifier}"; \
-		python3 ./validate.py -o "results/$${model_verifier}-fixed.results.CHC-COMP2025_check-sat.xml" \
+		python3 ./validate.py -o "results/$${model_verifier}-fixed.results.CHC-COMP2026_check-sat.xml" \
 			"$$verifier_overall" $$validator_args; \
 		./benchexec/bin/table-generator --no-diff \
 			--name results-$${model_verifier}-model-overall \
 			--outputpath results/tables \
-			"results/$${model_verifier}-fixed.results.CHC-COMP2025_check-sat.xml" $$validator_args; \
+			"results/$${model_verifier}-fixed.results.CHC-COMP2026_check-sat.xml" $$validator_args; \
 	done
 
 # Overall tables for plain verifiers (all categories combined)
 plain-overall-tables:
 	@for plain_verifier in $(PLAIN_VERIFIERS); do \
-		verifier_overall=$$(ls -d results/$${plain_verifier}.*results.CHC-COMP2025_check-sat.xml 2>/dev/null | sort -V | tail -n 1); \
+		verifier_overall=$$(ls -d results/$${plain_verifier}.*results.CHC-COMP2026_check-sat.xml 2>/dev/null | sort -V | tail -n 1); \
 		if [ -z "$$verifier_overall" ]; then continue; fi; \
 		echo "Generating overall table: $${plain_verifier}"; \
 		./benchexec/bin/table-generator --no-diff \
@@ -303,17 +303,17 @@ plain-overall-tables:
 # Cross-verifier comparison tables per category (separate model and solver tracks)
 cross-verifier-tables:
 	@all_categories=""; \
-	for f in results/*-fixed.results.CHC-COMP2025_check-sat.*.xml; do \
-		[ -e "$$f" ] && all_categories="$$all_categories $$(echo "$$f" | sed 's|results/[^.]*-fixed\.results\.CHC-COMP2025_check-sat\.\(.*\)\.xml|\1|')"; \
+	for f in results/*-fixed.results.CHC-COMP2026_check-sat.*.xml; do \
+		[ -e "$$f" ] && all_categories="$$all_categories $$(echo "$$f" | sed 's|results/[^.]*-fixed\.results\.CHC-COMP2026_check-sat\.\(.*\)\.xml|\1|')"; \
 	done; \
 	for plain_verifier in $(PLAIN_VERIFIERS); do \
-		for f in results/$${plain_verifier}.*results.CHC-COMP2025_check-sat.*.xml; do \
-			[ -e "$$f" ] && all_categories="$$all_categories $$(echo "$$f" | sed 's/.*\.CHC-COMP2025_check-sat\.\(.*\)\.xml/\1/')"; \
+		for f in results/$${plain_verifier}.*results.CHC-COMP2026_check-sat.*.xml; do \
+			[ -e "$$f" ] && all_categories="$$all_categories $$(echo "$$f" | sed 's/.*\.CHC-COMP2026_check-sat\.\(.*\)\.xml/\1/')"; \
 		done; \
 	done; \
 	for category in $$(echo $$all_categories | tr ' ' '\n' | sort -u); do \
 		model_inputs=""; \
-		for f in results/*-fixed.results.CHC-COMP2025_check-sat.$${category}.xml; do \
+		for f in results/*-fixed.results.CHC-COMP2026_check-sat.$${category}.xml; do \
 			[ -e "$$f" ] && model_inputs="$$model_inputs $$f"; \
 		done; \
 		if [ -n "$$model_inputs" ]; then \
@@ -325,7 +325,7 @@ cross-verifier-tables:
 		fi; \
 		solver_inputs=""; \
 		for plain_verifier in $(PLAIN_VERIFIERS); do \
-			pv_latest=$$(ls -d results/$${plain_verifier}.*results.CHC-COMP2025_check-sat.$${category}.xml 2>/dev/null | sort -V | tail -n 1); \
+			pv_latest=$$(ls -d results/$${plain_verifier}.*results.CHC-COMP2026_check-sat.$${category}.xml 2>/dev/null | sort -V | tail -n 1); \
 			[ -n "$$pv_latest" ] && solver_inputs="$$solver_inputs $$pv_latest"; \
 		done; \
 		if [ -n "$$solver_inputs" ]; then \
