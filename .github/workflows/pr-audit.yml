@@ -39,14 +39,13 @@ jobs:
       - name: Download tools
         id: download
         run: |
+          if make download-tools 2>&1; then
+            echo "All tools downloaded successfully."
+          else
+            echo "ERROR: Some tools failed to download."
+          fi
           {
             echo 'output<<EOF'
-            if make download-tools 2>&1; then
-              echo "All tools downloaded successfully."
-            else
-              echo "ERROR: Some tools failed to download."
-            fi
-            echo ""
             echo "Contents of tools/:"
             find tools -maxdepth 2 -type f | sort
             echo 'EOF'
