@@ -104,7 +104,7 @@ $(TOOLS_DIRECTORY)/eldarica:
 $(TOOLS_DIRECTORY)/golem:
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
-	wget https://github.com/usi-verification-and-security/golem/releases/download/v0.8.1/golem-x64-linux.tar.bz2 -O $(TOOLS_DIRECTORY)/golem.tar.bz2
+	wget https://github.com/usi-verification-and-security/golem/releases/download/v0.9.0/golem-x64-linux.tar.bz2 -O $(TOOLS_DIRECTORY)/golem.tar.bz2
 	cd $(TOOLS_DIRECTORY) && mkdir -p golem && cd golem && tar xvjf ../golem.tar.bz2
 	rm $(TOOLS_DIRECTORY)/golem.tar.bz2
 
