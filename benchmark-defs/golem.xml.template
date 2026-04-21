@@ -19,13 +19,6 @@
     <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
 
-  <tasks name="LRA">
-    <option>--logic=QF_LRA</option>
-    <option>--engine=imc,kind,pdkind,split-tpa</option>
-    <includesfile>../chc-comp26-benchmarks/LRA.set</includesfile>
-    <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
-  </tasks>
-
   <tasks name="LIA">
     <option>--logic=QF_LIA</option>
     <option>--engine=spacer,pa</option>
