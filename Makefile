@@ -223,12 +223,16 @@ $(foreach val,$(VALIDATORS),\
 
 process-results: generate-tables prepare-pages
 
-generate-tables: clean-tables model-verifier-tables plain-verifier-tables \
+generate-tables: clean-tables relabel-verdicts model-verifier-tables plain-verifier-tables \
 	model-overall-tables plain-overall-tables cross-verifier-tables
 
 clean-tables:
 	@mkdir -p results/tables
 	@rm -f results/tables/*.html results/tables/*.csv
+
+relabel-verdicts:
+	@python3 majority-vote-relabel.py chc-comp26-benchmarks results
+
 
 # Model verifiers: validate with validate.py, then generate per-verifier tables
 model-verifier-tables:
