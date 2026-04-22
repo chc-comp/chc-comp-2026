@@ -68,7 +68,8 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
-	$(TOOLS_DIRECTORY)/theta
+	$(TOOLS_DIRECTORY)/theta \
+	$(TOOLS_DIRECTORY)/sample-tool \
 
 download-validators: \
 	$(TOOLS_DIRECTORY)/z3 \
@@ -121,6 +122,18 @@ $(TOOLS_DIRECTORY)/spacer: $(TOOLS_DIRECTORY)/z3
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
 	ln -sf ./z3/bin $(TOOLS_DIRECTORY)/spacer
+
+$(TOOLS_DIRECTORY)/sample-tool:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	# If the tool is zenodo-hosted:
+	# wget 'https://zenodo.org/records/XXXXXXXX/files/sample-tool.zip' -O $(TOOLS_DIRECTORY)/sample-tool.zip
+	# cd $(TOOLS_DIRECTORY) && unzip sample-tool.zip
+	# rm $(TOOLS_DIRECTORY)/sample-tool.zip
+	# This is just so the sample tool has something in its directory for demonstration purposes. Replace with actual download/extract commands:
+	echo "#!/bin/bash" > $(TOOLS_DIRECTORY)/sample-tool/sample-tool-binary
+	echo "echo 'Sample Tool running on $$1 with options: $$@'" >> $(TOOLS_DIRECTORY)/sample-tool/sample-tool-binary
+	chmod +x $(TOOLS_DIRECTORY)/sample-tool/sample-tool-binary
 
 ### TODO: add new verifiers here.
 
