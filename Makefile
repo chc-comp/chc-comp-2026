@@ -67,13 +67,13 @@ download-tools: download-verifiers download-validators
 
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
-	$(TOOLS_DIRECTORY)/princess \
 	$(TOOLS_DIRECTORY)/spacer \
+	$(TOOLS_DIRECTORY)/theta
 
 download-validators: \
 	$(TOOLS_DIRECTORY)/z3 \
 	$(TOOLS_DIRECTORY)/cvc5 \
-	$(TOOLS_DIRECTORY)/theta
+	$(TOOLS_DIRECTORY)/princess
 
 download-all: benchexec chc-comp26-benchmarks-full chc-comp26-benchmarks-test download-tools
 
@@ -113,7 +113,7 @@ $(TOOLS_DIRECTORY)/golem:
 $(TOOLS_DIRECTORY)/theta:
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
-	wget 'https://zenodo.org/records/19664890/files/Theta-chccomp.zip' -O $(TOOLS_DIRECTORY)/theta.zip
+	wget 'https://zenodo.org/records/19692196/files/Theta-chccomp.zip' -O $(TOOLS_DIRECTORY)/theta.zip
 	cd $(TOOLS_DIRECTORY) && unzip theta.zip && mv Theta-chccomp theta
 	rm $(TOOLS_DIRECTORY)/theta.zip
 
