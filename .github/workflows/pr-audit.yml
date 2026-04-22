@@ -59,3 +59,5 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-path: comment.md
+          comment-id: templates
+          edit-mode: append
