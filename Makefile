@@ -115,7 +115,7 @@ $(TOOLS_DIRECTORY)/loat:
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
 	wget https://github.com/LoAT-developers/LoAT/releases/download/chc-comp-2026-v1/LoAT.zip -O $(TOOLS_DIRECTORY)/LoAT.zip
-	cd $(TOOLS_DIRECTORY) && mkdir -p loat && cd loat && unzip ../LoAT.zip
+	cd $(TOOLS_DIRECTORY) && unzip ./LoAT.zip && mv LoAT loat
 	rm $(TOOLS_DIRECTORY)/LoAT.zip
 
 $(TOOLS_DIRECTORY)/theta:
