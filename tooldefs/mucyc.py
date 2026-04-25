@@ -17,11 +17,11 @@ class Tool(benchexec.tools.chc.ChcTool):
         "config",
         "lib",
         "main.exe",
-        "mucyc.sh",
+        "coar.sh",
     ]
 
     def executable(self, tool_locator):
-        return tool_locator.find_executable("mucyc.sh")
+        return tool_locator.find_executable("coar.sh")
 
     def version(self, executable):
         return self._version_from_tool(executable, arg="-version")
