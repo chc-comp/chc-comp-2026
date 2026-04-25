@@ -127,7 +127,7 @@ $(TOOLS_DIRECTORY)/spacer: $(TOOLS_DIRECTORY)/z3
 $(TOOLS_DIRECTORY)/mucyc:
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
-	wget 'https://www.dropbox.com/scl/fi/6rrzcj9vjnxkbe5ot5v5j/mucyc-chccomp2026.zip?rlkey=2c8vs56slmu0kpam579qkcbz2&e=1&st=71pj5ti2&dl=1' -O $(TOOLS_DIRECTORY)/mucyc.zip
+	wget 'https://www.dropbox.com/scl/fi/0qik18v7oc5fiyu0i7eo2/mucyc-chccomp2026.zip?rlkey=ou71huf7go005v5r121hz9432&st=9d95ovo5&dl=0' -O $(TOOLS_DIRECTORY)/mucyc.zip
 	cd $(TOOLS_DIRECTORY) && unzip mucyc.zip && mv coar mucyc
 	rm $(TOOLS_DIRECTORY)/mucyc.zip
 
