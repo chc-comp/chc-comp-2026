@@ -68,7 +68,8 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
-	$(TOOLS_DIRECTORY)/theta
+	$(TOOLS_DIRECTORY)/theta \
+	$(TOOLS_DIRECTORY)/mucyc \
 
 download-validators: \
 	$(TOOLS_DIRECTORY)/z3 \
@@ -123,6 +124,12 @@ $(TOOLS_DIRECTORY)/spacer: $(TOOLS_DIRECTORY)/z3
 	ln -sf ./z3/bin $(TOOLS_DIRECTORY)/spacer
 
 ### TODO: add new verifiers here.
+$(TOOLS_DIRECTORY)/mucyc:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://www.dropbox.com/scl/fi/6rrzcj9vjnxkbe5ot5v5j/mucyc-chccomp2026.zip?rlkey=2c8vs56slmu0kpam579qkcbz2&e=1&st=71pj5ti2&dl=1' -O $(TOOLS_DIRECTORY)/mucyc.zip
+	cd $(TOOLS_DIRECTORY) && unzip mucyc.zip
+	rm $(TOOLS_DIRECTORY)/mucyc.zip
 
 ### Below are the validators.
 
