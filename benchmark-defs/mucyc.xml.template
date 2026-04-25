@@ -34,11 +34,15 @@
   </tasks>
 
   <tasks name="ADT-LIA">
+    <option name="-c"> ./config/solver/mucyc_yieldTT_mbp1.json</option>
+    <option name="-p"> pcsp</option>  
     <includesfile>../chc-comp26-benchmarks/ADT-LIA.set</includesfile>
     <propertyfile expectedverdict="true">../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
 
   <tasks name="ADT-LIA-Arrays">
+    <option name="-c"> ./config/solver/mucyc_yieldTT_mbp1.json</option>
+    <option name="-p"> pcsp</option>
     <includesfile>../chc-comp26-benchmarks/ADT-LIA-Arrays.set</includesfile>
     <propertyfile expectedverdict="true">../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
