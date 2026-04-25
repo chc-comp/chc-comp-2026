@@ -7,42 +7,42 @@
 
 <rundefinition name="CHC-COMP2026_check-sat">
   <tasks name="LIA-Lin">
-    <option name="-c"> ./config/solver/mucyc_returnF_mbp0_indNF.json</option>
-    <option name="-p"> pcsp</option>
+    <option name="-c">./config/solver/mucyc_returnF_mbp0_indNF.json</option>
+    <option name="-p">pcsp</option>
     <includesfile>../chc-comp26-benchmarks/LIA-Lin.set</includesfile>
     <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
 
   <tasks name="LIA">
-    <option name="-c"> ./config/solver/mucyc_returnF_mbp0_indNF.json</option>
-    <option name="-p"> pcsp</option>
+    <option name="-c">./config/solver/mucyc_returnF_mbp0_indNF.json</option>
+    <option name="-p">pcsp</option>
     <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
 
   <tasks name="LIA-Arrays">
-    <option name="-c"> ./config/solver/mucyc_yieldTT_mbp1_indNF.json</option>
-    <option name="-p"> pcsp</option>
+    <option name="-c">./config/solver/mucyc_yieldTT_mbp1_indNF.json</option>
+    <option name="-p">pcsp</option>
     <includesfile>../chc-comp26-benchmarks/LIA-Arrays.set</includesfile>
     <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
 
   <tasks name="LIA-Lin-Arrays">
-    <option name="-c"> ./config/solver/mucyc_yieldTT_mbp1_indNF.json</option>
-    <option name="-p"> pcsp</option>
+    <option name="-c">./config/solver/mucyc_yieldTT_mbp1_indNF.json</option>
+    <option name="-p">pcsp</option>
     <includesfile>../chc-comp26-benchmarks/LIA-Lin-Arrays.set</includesfile>
     <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
 
   <tasks name="ADT-LIA">
-    <option name="-c"> ./config/solver/mucyc_yieldTT_mbp1_indNF.json</option>
-    <option name="-p"> pcsp</option>  
+    <option name="-c">./config/solver/mucyc_yieldTT_mbp1_indNF.json</option>
+    <option name="-p">pcsp</option>  
     <includesfile>../chc-comp26-benchmarks/ADT-LIA.set</includesfile>
     <propertyfile expectedverdict="true">../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
 
   <tasks name="ADT-LIA-Arrays">
-    <option name="-c"> ./config/solver/mucyc_yieldTT_mbp1_indNF.json</option>
-    <option name="-p"> pcsp</option>
+    <option name="-c">./config/solver/mucyc_yieldTT_mbp1_indNF.json</option>
+    <option name="-p">pcsp</option>
     <includesfile>../chc-comp26-benchmarks/ADT-LIA-Arrays.set</includesfile>
     <propertyfile expectedverdict="true">../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
