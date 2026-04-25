@@ -68,7 +68,8 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
-	$(TOOLS_DIRECTORY)/theta
+	$(TOOLS_DIRECTORY)/theta \
+	$(TOOLS_DIRECTORY)/pcsat
 
 download-validators: \
 	$(TOOLS_DIRECTORY)/z3 \
@@ -116,6 +117,13 @@ $(TOOLS_DIRECTORY)/theta:
 	wget 'https://zenodo.org/records/19692196/files/Theta-chccomp.zip' -O $(TOOLS_DIRECTORY)/theta.zip
 	cd $(TOOLS_DIRECTORY) && unzip theta.zip && mv Theta-chccomp theta
 	rm $(TOOLS_DIRECTORY)/theta.zip
+
+$(TOOLS_DIRECTORY)/pcsat:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://www.dropbox.com/scl/fi/x17uakz9wmcvb25m8e7jv/pcsat-chccomp2026.zip?rlkey=uw0g44p2uoc6d0u3ulqbasw5n&st=932pv0gx&dl=0' -O $(TOOLS_DIRECTORY)/pcsat.zip
+	cd $(TOOLS_DIRECTORY) && unzip pcsat.zip && mv coar pcsat
+	rm $(TOOLS_DIRECTORY)/pcsat.zip
 
 $(TOOLS_DIRECTORY)/spacer: $(TOOLS_DIRECTORY)/z3
 	mkdir -p $(TOOLS_DIRECTORY)
