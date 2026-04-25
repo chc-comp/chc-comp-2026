@@ -128,7 +128,7 @@ $(TOOLS_DIRECTORY)/mucyc:
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
 	wget 'https://www.dropbox.com/scl/fi/6rrzcj9vjnxkbe5ot5v5j/mucyc-chccomp2026.zip?rlkey=2c8vs56slmu0kpam579qkcbz2&e=1&st=71pj5ti2&dl=1' -O $(TOOLS_DIRECTORY)/mucyc.zip
-	cd $(TOOLS_DIRECTORY) && unzip mucyc.zip
+	cd $(TOOLS_DIRECTORY) && unzip mucyc.zip && mv coar mucyc
 	rm $(TOOLS_DIRECTORY)/mucyc.zip
 
 ### Below are the validators.
