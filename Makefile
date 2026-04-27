@@ -68,6 +68,7 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
+  $(TOOLS_DIRECTORY)/eldarica \
 	$(TOOLS_DIRECTORY)/theta \
 	$(TOOLS_DIRECTORY)/loat
 
@@ -131,6 +132,13 @@ $(TOOLS_DIRECTORY)/spacer: $(TOOLS_DIRECTORY)/z3
 	ln -sf ./z3/bin $(TOOLS_DIRECTORY)/spacer
 
 ### TODO: add new verifiers here.
+
+$(TOOLS_DIRECTORY)/eldarica:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://eldarica.org/eldarica-x86-linux-2.3pre.zip' -O $(TOOLS_DIRECTORY)/eldarica.zip
+	cd $(TOOLS_DIRECTORY) && unzip eldarica.zip && mv eldarica-x86-linux-2.3pre eldarica
+	rm $(TOOLS_DIRECTORY)/eldarica.zip
 
 ### Below are the validators.
 
