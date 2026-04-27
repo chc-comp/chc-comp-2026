@@ -70,7 +70,8 @@ download-verifiers: \
 	$(TOOLS_DIRECTORY)/spacer \
 	$(TOOLS_DIRECTORY)/chococatalia \
 	$(TOOLS_DIRECTORY)/eldarica \
-	$(TOOLS_DIRECTORY)/theta
+	$(TOOLS_DIRECTORY)/theta \
+	$(TOOLS_DIRECTORY)/loat
 
 download-validators: \
 	$(TOOLS_DIRECTORY)/z3 \
@@ -114,6 +115,13 @@ $(TOOLS_DIRECTORY)/golem:
 	wget https://github.com/usi-verification-and-security/golem/releases/download/v0.9.0/golem-x64-linux.tar.bz2 -O $(TOOLS_DIRECTORY)/golem.tar.bz2
 	cd $(TOOLS_DIRECTORY) && mkdir -p golem && cd golem && tar xvjf ../golem.tar.bz2
 	rm $(TOOLS_DIRECTORY)/golem.tar.bz2
+
+$(TOOLS_DIRECTORY)/loat:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget https://github.com/LoAT-developers/LoAT/releases/download/chc-comp-2026-v1/LoAT.zip -O $(TOOLS_DIRECTORY)/LoAT.zip
+	cd $(TOOLS_DIRECTORY) && unzip ./LoAT.zip && mv LoAT loat
+	rm $(TOOLS_DIRECTORY)/LoAT.zip
 
 $(TOOLS_DIRECTORY)/theta:
 	mkdir -p $(TOOLS_DIRECTORY)

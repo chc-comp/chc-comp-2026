@@ -14,18 +14,17 @@ class Tool(benchexec.tools.chc.ChcTool):
     """
 
     REQUIRED_PATHS = [
-        "loat_chc_comp.sh",
+        "loat.sh",
+        "loat_lia_lin.sh",
+        "loat_lia_lin_arrays.sh",
         "loat-static",
     ]
 
     def executable(self, tool_locator):
-        return tool_locator.find_executable("loat_chc_comp.sh")
+        return tool_locator.find_executable("loat.sh")
 
     def version(self, executable):
-        # executable = tool_locator.find_executable("loat-static")
-        # XXX: this is done because the main executable blocks when no input files are given
-        executable = executable.replace("loat_chc_comp.sh", "loat-static")
-        return self._version_from_tool(executable, line_prefix="LoAT:  ")
+        return self._version_from_tool(executable, line_prefix="LoAT")
 
     def name(self):
         return "LoAT"
