@@ -1,5 +1,5 @@
 #!/bin/bash
-export BENCHMARK="timeout -k 60 360 benchexec/bin/benchexec"
+export BENCHMARK="timeout -k 60 1350 benchexec/bin/benchexec"
 export BENCHMARK_PARAMS="--read-only-dir=/ \
                          --overlay-dir=/home \
                          --limitCores '-1' \
