@@ -23,7 +23,7 @@ jobs:
         run: python3 -m pip install --upgrade pip pyyaml ply
 
       - name: Download all dependencies
-        run: make download-all
+        run: make download-all -j4
 
       - name: Generate verifier matrix
         id: matrix
