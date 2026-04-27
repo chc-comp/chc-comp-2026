@@ -108,6 +108,21 @@ jobs:
           source benchmark-utils/ci_config.sh
           make verification-${{ matrix.verifier }}
 
+      - name: Process and validate models
+        if: always()
+        run: |
+          VERIFIER="${{ matrix.verifier }}"
+          if [[ "$VERIFIER" == *-model ]]; then
+            BASE="${VERIFIER%-model}"
+            source benchmark-utils/ci_config.sh
+            make process-models-$BASE
+            for validator in $(ls benchmark-defs/*-validation.xml.template \
+                | xargs -n1 basename \
+                | sed 's/-validation\.xml\.template//'); do
+              make ${validator}-validate-${BASE}-models
+            done
+          fi
+
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v4
@@ -169,16 +184,6 @@ jobs:
           pattern: results-*
           path: results/
           merge-multiple: true
-
-      - name: Process models
-        run: |
-          source benchmark-utils/ci_config.sh
-          make process-all-models
-
-      - name: Validate all models
-        run: |
-          source benchmark-utils/ci_config.sh
-          make validate-all
 
       - name: Generate result tables
         run: |
