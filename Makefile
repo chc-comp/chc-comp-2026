@@ -68,8 +68,9 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
-	$(TOOLS_DIRECTORY)/theta \
 	$(TOOLS_DIRECTORY)/mucyc \
+	$(TOOLS_DIRECTORY)/eldarica \
+	$(TOOLS_DIRECTORY)/theta
 
 download-validators: \
 	$(TOOLS_DIRECTORY)/z3 \
@@ -130,6 +131,13 @@ $(TOOLS_DIRECTORY)/mucyc:
 	wget 'https://www.dropbox.com/scl/fi/0qik18v7oc5fiyu0i7eo2/mucyc-chccomp2026.zip?rlkey=ou71huf7go005v5r121hz9432&st=9d95ovo5&dl=0' -O $(TOOLS_DIRECTORY)/mucyc.zip
 	cd $(TOOLS_DIRECTORY) && unzip mucyc.zip && mv coar mucyc
 	rm $(TOOLS_DIRECTORY)/mucyc.zip
+
+$(TOOLS_DIRECTORY)/eldarica:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://eldarica.org/eldarica-x86-linux-2.3pre.zip' -O $(TOOLS_DIRECTORY)/eldarica.zip
+	cd $(TOOLS_DIRECTORY) && unzip eldarica.zip && mv eldarica-x86-linux-2.3pre eldarica
+	rm $(TOOLS_DIRECTORY)/eldarica.zip
 
 ### Below are the validators.
 
