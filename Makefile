@@ -100,7 +100,10 @@ chc-comp26-benchmarks-full:
 
 chc-comp26-benchmarks-test: chc-comp26-benchmarks-full
 	cp -r chc-comp26-benchmarks-full chc-comp26-benchmarks-test
-	@for i in chc-comp26-benchmarks-test/*.set; do echo $$i; lines=$$(head -n5 "$$i"); rm $$i; for line in $${lines}; do echo $${line} >> $$i; done; done
+	@for i in chc-comp26-benchmarks-test/*.set; do \
+		echo $$i; \
+		python3 select-test-tasks.py $$i chc-comp26-benchmarks-test; \
+	done
 
 ### Tools: each tool is downloaded, extracted, and placed in a subdirectory of $(TOOLS_DIRECTORY) with
 ### the same name as the tool (e.g., tools/golem).
