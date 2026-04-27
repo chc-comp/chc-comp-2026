@@ -15,9 +15,7 @@ class Tool(benchexec.tools.chc.ChcTool):
 
     REQUIRED_PATHS = [
         "eld",
-        "eldEnv",
-        "bin",
-        "target",
+        "yices"
     ]
 
     def executable(self, tool_locator):

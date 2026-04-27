@@ -68,8 +68,9 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
-	$(TOOLS_DIRECTORY)/theta \
 	$(TOOLS_DIRECTORY)/chococatalia
+	$(TOOLS_DIRECTORY)/eldarica \
+	$(TOOLS_DIRECTORY)/theta
 
 download-validators: \
 	$(TOOLS_DIRECTORY)/z3 \
@@ -131,6 +132,13 @@ $(TOOLS_DIRECTORY)/chococatalia:
 	cd $(TOOLS_DIRECTORY) && unzip chococatalia.zip && mv archive chococatalia
 	rm $(TOOLS_DIRECTORY)/chococatalia.zip
 ### TODO: add new verifiers here.
+
+$(TOOLS_DIRECTORY)/eldarica:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://eldarica.org/eldarica-x86-linux-2.3pre.zip' -O $(TOOLS_DIRECTORY)/eldarica.zip
+	cd $(TOOLS_DIRECTORY) && unzip eldarica.zip && mv eldarica-x86-linux-2.3pre eldarica
+	rm $(TOOLS_DIRECTORY)/eldarica.zip
 
 ### Below are the validators.
 
