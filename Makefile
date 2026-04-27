@@ -68,7 +68,8 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
-  $(TOOLS_DIRECTORY)/eldarica \
+	$(TOOLS_DIRECTORY)/chococatalia \
+	$(TOOLS_DIRECTORY)/eldarica \
 	$(TOOLS_DIRECTORY)/theta \
 	$(TOOLS_DIRECTORY)/loat
 
@@ -100,7 +101,10 @@ chc-comp26-benchmarks-full:
 
 chc-comp26-benchmarks-test: chc-comp26-benchmarks-full
 	cp -r chc-comp26-benchmarks-full chc-comp26-benchmarks-test
-	@for i in chc-comp26-benchmarks-test/*.set; do echo $$i; lines=$$(head -n5 "$$i"); rm $$i; for line in $${lines}; do echo $${line} >> $$i; done; done
+	@for i in chc-comp26-benchmarks-test/*.set; do \
+		echo $$i; \
+		python3 select-test-tasks.py $$i chc-comp26-benchmarks-test 10; \
+	done
 
 ### Tools: each tool is downloaded, extracted, and placed in a subdirectory of $(TOOLS_DIRECTORY) with
 ### the same name as the tool (e.g., tools/golem).
@@ -131,6 +135,13 @@ $(TOOLS_DIRECTORY)/spacer: $(TOOLS_DIRECTORY)/z3
 	rm -rf $@
 	ln -sf ./z3/bin $(TOOLS_DIRECTORY)/spacer
 
+
+$(TOOLS_DIRECTORY)/chococatalia:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://www.kb.is.s.u-tokyo.ac.jp/~katsura/chc-comp-2026/archive.zip' -O $(TOOLS_DIRECTORY)/chococatalia.zip
+	cd $(TOOLS_DIRECTORY) && unzip chococatalia.zip && mv archive chococatalia
+	rm $(TOOLS_DIRECTORY)/chococatalia.zip
 ### TODO: add new verifiers here.
 
 $(TOOLS_DIRECTORY)/eldarica:
