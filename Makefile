@@ -68,6 +68,7 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
+	$(TOOLS_DIRECTORY)/chococatalia \
 	$(TOOLS_DIRECTORY)/eldarica \
 	$(TOOLS_DIRECTORY)/theta
 
@@ -123,6 +124,13 @@ $(TOOLS_DIRECTORY)/spacer: $(TOOLS_DIRECTORY)/z3
 	rm -rf $@
 	ln -sf ./z3/bin $(TOOLS_DIRECTORY)/spacer
 
+
+$(TOOLS_DIRECTORY)/chococatalia:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://www.kb.is.s.u-tokyo.ac.jp/~katsura/chc-comp-2026/archive.zip' -O $(TOOLS_DIRECTORY)/chococatalia.zip
+	cd $(TOOLS_DIRECTORY) && unzip chococatalia.zip && mv archive chococatalia
+	rm $(TOOLS_DIRECTORY)/chococatalia.zip
 ### TODO: add new verifiers here.
 
 $(TOOLS_DIRECTORY)/eldarica:
