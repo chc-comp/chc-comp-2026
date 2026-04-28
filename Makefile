@@ -122,7 +122,7 @@ $(TOOLS_DIRECTORY)/theta:
 $(TOOLS_DIRECTORY)/pcsat:
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
-	wget 'https://www.dropbox.com/scl/fi/n234zx1w69kffdz9r10in/pcsat-chccomp2026-7ad879e4.zip?rlkey=1ne9yyag0u2jehj5sdql207fn&st=dg6yguc8&dl=0' -O $(TOOLS_DIRECTORY)/pcsat.zip
+	wget 'https://www.dropbox.com/scl/fi/s9yho5yhxb3uqdv97ehi3/pcsat-chccomp2026-bebd99ab.zip?rlkey=sa4wu6yhx6iiw1l615b3t4jsl&st=5gpcs9f5&dl=0' -O $(TOOLS_DIRECTORY)/pcsat.zip
 	cd $(TOOLS_DIRECTORY) && unzip pcsat.zip && mv coar pcsat
 	rm $(TOOLS_DIRECTORY)/pcsat.zip
 
