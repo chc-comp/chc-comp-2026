@@ -16,6 +16,7 @@
   <tasks name="LIA">
     <option name="-c">./config/solver/mucyc_returnF_mbp0_indNF.json</option>
     <option name="-p">pcsp</option>
+    <includesfile>../chc-comp26-benchmarks/LIA.set</includesfile>
     <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
 
