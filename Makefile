@@ -68,6 +68,7 @@ download-tools: download-verifiers download-validators
 download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
+	$(TOOLS_DIRECTORY)/mucyc \
 	$(TOOLS_DIRECTORY)/chococatalia \
 	$(TOOLS_DIRECTORY)/eldarica \
 	$(TOOLS_DIRECTORY)/theta \
@@ -143,6 +144,12 @@ $(TOOLS_DIRECTORY)/chococatalia:
 	cd $(TOOLS_DIRECTORY) && unzip chococatalia.zip && mv archive chococatalia
 	rm $(TOOLS_DIRECTORY)/chococatalia.zip
 ### TODO: add new verifiers here.
+$(TOOLS_DIRECTORY)/mucyc:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://www.dropbox.com/scl/fi/26f94kis9iyz8d11ynhnk/mucyc-chccomp2026-288a4c19.zip?rlkey=75sl20qm8l1czcn0v1y3d09d7&st=wn73hpn6&dl=0' -O $(TOOLS_DIRECTORY)/mucyc.zip
+	cd $(TOOLS_DIRECTORY) && unzip mucyc.zip && mv coar mucyc
+	rm $(TOOLS_DIRECTORY)/mucyc.zip
 
 $(TOOLS_DIRECTORY)/eldarica:
 	mkdir -p $(TOOLS_DIRECTORY)
