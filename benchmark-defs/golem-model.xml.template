@@ -27,13 +27,6 @@
     <includesfile>../chc-comp26-benchmarks/LIA.set</includesfile>
     <propertyfile expectedverdict="true">../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
   </tasks>
-
-  <tasks name="LIA-Lin-Arrays">
-    <option>--logic=QF_ALIA</option>
-    <option>--engine=bmc,kind</option>
-    <includesfile>../chc-comp26-benchmarks/LIA-Lin-Arrays.set</includesfile>
-    <propertyfile expectedverdict="true">../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
-  </tasks>
 </rundefinition>
 
 </benchmark>
