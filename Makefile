@@ -69,8 +69,10 @@ download-verifiers: \
 	$(TOOLS_DIRECTORY)/golem \
 	$(TOOLS_DIRECTORY)/spacer \
 	$(TOOLS_DIRECTORY)/mucyc \
+	$(TOOLS_DIRECTORY)/chococatalia \
 	$(TOOLS_DIRECTORY)/eldarica \
-	$(TOOLS_DIRECTORY)/theta
+	$(TOOLS_DIRECTORY)/theta \
+	$(TOOLS_DIRECTORY)/loat
 
 download-validators: \
 	$(TOOLS_DIRECTORY)/z3 \
@@ -100,7 +102,10 @@ chc-comp26-benchmarks-full:
 
 chc-comp26-benchmarks-test: chc-comp26-benchmarks-full
 	cp -r chc-comp26-benchmarks-full chc-comp26-benchmarks-test
-	@for i in chc-comp26-benchmarks-test/*.set; do echo $$i; lines=$$(head -n5 "$$i"); rm $$i; for line in $${lines}; do echo $${line} >> $$i; done; done
+	@for i in chc-comp26-benchmarks-test/*.set; do \
+		echo $$i; \
+		python3 select-test-tasks.py $$i chc-comp26-benchmarks-test 10; \
+	done
 
 ### Tools: each tool is downloaded, extracted, and placed in a subdirectory of $(TOOLS_DIRECTORY) with
 ### the same name as the tool (e.g., tools/golem).
@@ -111,6 +116,13 @@ $(TOOLS_DIRECTORY)/golem:
 	wget https://github.com/usi-verification-and-security/golem/releases/download/v0.9.0/golem-x64-linux.tar.bz2 -O $(TOOLS_DIRECTORY)/golem.tar.bz2
 	cd $(TOOLS_DIRECTORY) && mkdir -p golem && cd golem && tar xvjf ../golem.tar.bz2
 	rm $(TOOLS_DIRECTORY)/golem.tar.bz2
+
+$(TOOLS_DIRECTORY)/loat:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget https://github.com/LoAT-developers/LoAT/releases/download/chc-comp-2026-v1/LoAT.zip -O $(TOOLS_DIRECTORY)/LoAT.zip
+	cd $(TOOLS_DIRECTORY) && unzip ./LoAT.zip && mv LoAT loat
+	rm $(TOOLS_DIRECTORY)/LoAT.zip
 
 $(TOOLS_DIRECTORY)/theta:
 	mkdir -p $(TOOLS_DIRECTORY)
@@ -124,6 +136,13 @@ $(TOOLS_DIRECTORY)/spacer: $(TOOLS_DIRECTORY)/z3
 	rm -rf $@
 	ln -sf ./z3/bin $(TOOLS_DIRECTORY)/spacer
 
+
+$(TOOLS_DIRECTORY)/chococatalia:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget 'https://www.kb.is.s.u-tokyo.ac.jp/~katsura/chc-comp-2026/archive.zip' -O $(TOOLS_DIRECTORY)/chococatalia.zip
+	cd $(TOOLS_DIRECTORY) && unzip chococatalia.zip && mv archive chococatalia
+	rm $(TOOLS_DIRECTORY)/chococatalia.zip
 ### TODO: add new verifiers here.
 $(TOOLS_DIRECTORY)/mucyc:
 	mkdir -p $(TOOLS_DIRECTORY)

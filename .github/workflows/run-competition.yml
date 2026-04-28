@@ -7,7 +7,133 @@ permissions:
   contents: write
 
 jobs:
-  run:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      verifiers: ${{ steps.matrix.outputs.verifiers }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Python dependencies
+        run: python3 -m pip install --upgrade pip pyyaml ply
+
+      - name: Download all dependencies
+        run: make download-all -j4
+
+      - name: Generate verifier matrix
+        id: matrix
+        run: |
+          verifiers=$(ls benchmark-defs/*.xml.template \
+            | xargs -n1 basename \
+            | grep -v '\-validation\.xml\.template' \
+            | sed 's/\.xml\.template//' \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "verifiers=$verifiers" >> "$GITHUB_OUTPUT"
+
+      - name: Upload tools artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tools
+          path: tools/
+
+      - name: Upload benchexec artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchexec-install
+          path: benchexec/
+
+      - name: Upload benchmarks artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmarks
+          path: chc-comp26-benchmarks-test/
+
+  verify:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        verifier: ${{ fromJson(needs.setup.outputs.verifiers) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Python dependencies
+        run: python3 -m pip install --upgrade pip pyyaml ply
+
+      - name: Setup user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Restore tools
+        uses: actions/download-artifact@v4
+        with:
+          name: tools
+          path: tools/
+
+      - name: Restore benchexec
+        uses: actions/download-artifact@v4
+        with:
+          name: benchexec-install
+          path: benchexec/
+
+      - name: Restore benchmarks
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmarks
+          path: chc-comp26-benchmarks-test/
+
+      - name: Prepare workspace
+        run: |
+          chmod -R u+x tools/ benchexec/bin/
+          ln -sfn chc-comp26-benchmarks-test chc-comp26-benchmarks
+
+      - name: Run verifier
+        run: |
+          source benchmark-utils/ci_config.sh
+          make verification-${{ matrix.verifier }}
+
+      - name: Process and validate models
+        if: always()
+        run: |
+          VERIFIER="${{ matrix.verifier }}"
+          if [[ "$VERIFIER" == *-model ]]; then
+            BASE="${VERIFIER%-model}"
+            source benchmark-utils/ci_config.sh
+            make process-models-$BASE
+            for validator in $(ls benchmark-defs/*-validation.xml.template \
+                | xargs -n1 basename \
+                | sed 's/-validation\.xml\.template//'); do
+              make ${validator}-validate-${BASE}-models
+            done
+          fi
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.verifier }}
+          path: results/
+          if-no-files-found: ignore
+
+  post-process:
+    needs: verify
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,41 +153,44 @@ jobs:
         run: python3 -m pip install --upgrade pip pyyaml ply
 
       - name: Setup user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Restore tools
+        uses: actions/download-artifact@v4
+        with:
+          name: tools
+          path: tools/
+
+      - name: Restore benchexec
+        uses: actions/download-artifact@v4
+        with:
+          name: benchexec-install
+          path: benchexec/
+
+      - name: Restore benchmarks
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmarks
+          path: chc-comp26-benchmarks-test/
+
+      - name: Prepare workspace
         run: |
-          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          chmod -R u+x tools/ benchexec/bin/
+          ln -sfn chc-comp26-benchmarks-test chc-comp26-benchmarks
 
-      - name: Download all dependencies
-        run: make download-all
-
-      - name: Configure benchmark environment
-        run: source benchmark-utils/ci_config.sh
-
-      - name: Set up test benchmark suite
-        run: |
-          source benchmark-utils/ci_config.sh
-          make setup-test
-
-      - name: Run all verifiers
-        run: |
-          source benchmark-utils/ci_config.sh
-          make verify-all
-
-      - name: Process models
-        run: |
-          source benchmark-utils/ci_config.sh
-          make process-all-models
-
-      - name: Validate all models
-        run: |
-          source benchmark-utils/ci_config.sh
-          make validate-all
+      - name: Download all verifier results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          path: results/
+          merge-multiple: true
 
       - name: Generate result tables
         run: |
           source benchmark-utils/ci_config.sh
           make process-results
 
-      - name: Deploy Javadoc
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@22a6ee251d6f13c6ab1ecb200d974f1a6feb1b8d # v4.4.2
         with:
           branch: gh-pages
