@@ -132,7 +132,7 @@ $(TOOLS_DIRECTORY)/theta:
 	cd $(TOOLS_DIRECTORY) && unzip theta.zip && mv Theta-chccomp theta
 	rm $(TOOLS_DIRECTORY)/theta.zip
 
-$(TOOLS_DIRECTORY)/pcsat:
+$(TOOLS_DIRECTORY)/pcsat: $(TOOLS_DIRECTORY)/mucyc
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
 	wget 'https://www.dropbox.com/scl/fi/s9yho5yhxb3uqdv97ehi3/pcsat-chccomp2026-bebd99ab.zip?rlkey=sa4wu6yhx6iiw1l615b3t4jsl&st=5gpcs9f5&dl=0' -O $(TOOLS_DIRECTORY)/pcsat.zip
