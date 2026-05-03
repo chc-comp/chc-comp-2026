@@ -156,7 +156,7 @@ $(TOOLS_DIRECTORY)/chococatalia:
 $(TOOLS_DIRECTORY)/mucyc:
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
-	wget 'https://www.dropbox.com/scl/fi/26f94kis9iyz8d11ynhnk/mucyc-chccomp2026-288a4c19.zip?rlkey=75sl20qm8l1czcn0v1y3d09d7&st=wn73hpn6&dl=0' -O $(TOOLS_DIRECTORY)/mucyc.zip
+	wget 'https://www.dropbox.com/scl/fi/1efr0lhbcqzb2o61citvm/mucyc-chccomp2026-9fdd35812.zip?rlkey=9v3x2x5760vvp7pseidsmgeha&st=9sjozz3c&dl=0' -O $(TOOLS_DIRECTORY)/mucyc.zip
 	cd $(TOOLS_DIRECTORY) && unzip mucyc.zip && mv coar mucyc
 	rm $(TOOLS_DIRECTORY)/mucyc.zip
 
