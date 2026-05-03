@@ -136,7 +136,7 @@ $(TOOLS_DIRECTORY)/theta:
 $(TOOLS_DIRECTORY)/pcsat: $(TOOLS_DIRECTORY)/mucyc
 	mkdir -p $(TOOLS_DIRECTORY)
 	rm -rf $@
-	wget 'https://www.dropbox.com/scl/fi/s9yho5yhxb3uqdv97ehi3/pcsat-chccomp2026-bebd99ab.zip?rlkey=sa4wu6yhx6iiw1l615b3t4jsl&st=5gpcs9f5&dl=0' -O $(TOOLS_DIRECTORY)/pcsat.zip
+	wget 'https://www.dropbox.com/scl/fi/jszldb7nbl5n98yj6cqls/coar-a8ccef46f.zip?rlkey=zhbke8p1k9u859w4pzs9hf0fk&st=0n1wn7av&dl=0' -O $(TOOLS_DIRECTORY)/pcsat.zip
 	cd $(TOOLS_DIRECTORY) && unzip pcsat.zip && mv coar pcsat
 	rm $(TOOLS_DIRECTORY)/pcsat.zip
 
