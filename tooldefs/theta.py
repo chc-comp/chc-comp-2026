@@ -16,17 +16,16 @@ class Tool(benchexec.tools.chc.ChcTool):
     REQUIRED_PATHS = [
         "lib",
         "solvers",
-        "specification-transformation",
         "theta-smtlib.jar",
         "theta.jar",
-        "chc",
+        "theta-start.sh",
     ]
 
     def cmdline(self, executable, options, task, rlimits):
         return [executable, task.single_input_file] + options
 
     def executable(self, tool_locator):
-        return tool_locator.find_executable("chc")
+        return tool_locator.find_executable("theta-start.sh")
 
     def version(self, executable):
         return self._version_from_tool(executable)
