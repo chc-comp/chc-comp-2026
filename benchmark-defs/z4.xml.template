@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE benchmark PUBLIC "+//IDN sosy-lab.org//DTD BenchExec benchmark 1.9//EN" "https://www.sosy-lab.org/benchexec/benchmark-2.3.dtd">
+<benchmark tool="z4" timelimit="30 min" hardtimelimit="30 min" memlimit="30 GB" cpuCores="8">
+
+<rundefinition name="CHC-COMP2026_check-sat">
+  <tasks name="BV-Lin">
+    <option>--chc</option>
+    <option>-t:1800000</option>
+    <includesfile>../chc-comp26-benchmarks/BV-Lin.set</includesfile>
+    <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="LIA-Lin">
+    <option>--chc</option>
+    <option>-t:1800000</option>
+    <includesfile>../chc-comp26-benchmarks/LIA-Lin.set</includesfile>
+    <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="LIA-Lin-Arrays">
+    <option>--chc</option>
+    <option>-t:1800000</option>
+    <includesfile>../chc-comp26-benchmarks/LIA-Lin-Arrays.set</includesfile>
+    <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+
+  <tasks name="LIA">
+    <option>--chc</option>
+    <option>-t:1800000</option>
+    <includesfile>../chc-comp26-benchmarks/LIA.set</includesfile>
+    <propertyfile>../chc-comp26-benchmarks/properties/check-sat.prp</propertyfile>
+  </tasks>
+</rundefinition>
+
+</benchmark>
