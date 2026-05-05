@@ -167,14 +167,6 @@ $(TOOLS_DIRECTORY)/eldarica:
 	cd $(TOOLS_DIRECTORY) && unzip eldarica.zip && mv eldarica-x86-linux-2.3pre eldarica
 	rm $(TOOLS_DIRECTORY)/eldarica.zip
 
-$(TOOLS_DIRECTORY)/z4:
-	mkdir -p $(TOOLS_DIRECTORY)
-	rm -rf $@
-	wget 'https://zenodo.org/records/19995641/files/z4-chc-comp-2026-7d6c6bd89be8-linux-amd64.tar.gz?download=1' -O $(TOOLS_DIRECTORY)/z4.tar.gz
-	cd $(TOOLS_DIRECTORY) && mkdir -p z4 && cd z4 && tar xzf ../z4.tar.gz
-	chmod +x $(TOOLS_DIRECTORY)/z4/z4
-	rm $(TOOLS_DIRECTORY)/z4.tar.gz
-
 ### Below are the validators.
 
 $(TOOLS_DIRECTORY)/princess:
@@ -425,3 +417,12 @@ prepare-pages:
 		--model-verifiers $(MODEL_VERIFIERS) \
 		--plain-verifiers $(PLAIN_VERIFIERS)
 	@echo "Pages ready at results/pages/"
+
+$(TOOLS_DIRECTORY)/z4:
+	mkdir -p $(TOOLS_DIRECTORY)
+	rm -rf $@
+	wget "https://zenodo.org/records/20033748/files/z4-chccomp-2026-linux-x86_64.tar.gz?download=1" -O $(TOOLS_DIRECTORY)/z4.tar.gz
+	cd $(TOOLS_DIRECTORY) && mkdir -p z4 && tar -xzf z4.tar.gz -C z4 --strip-components=1
+	rm $(TOOLS_DIRECTORY)/z4.tar.gz
+	chmod +x $(TOOLS_DIRECTORY)/z4/z4
+	chmod +x $(TOOLS_DIRECTORY)/z4/run_solver.sh
