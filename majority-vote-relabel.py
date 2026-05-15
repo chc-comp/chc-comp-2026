@@ -90,6 +90,27 @@ def parse_result_xml(filepath):
     return results
 
 
+def collect_validated_sat(data_dir):
+    """Collect benchmarks that have a validated SAT (correct) result in any
+    -fixed result XML.  These are definitively SAT regardless of solver votes.
+    Returns: set of benchmark_path strings.
+    """
+    validated = set()
+    fixed_re = re.compile(r'^[a-z0-9]+-fixed\.results\.CHC-COMP2026_check-sat.*\.xml$')
+    for fname in sorted(os.listdir(data_dir)):
+        if not fixed_re.match(fname):
+            continue
+        filepath = os.path.join(data_dir, fname)
+        tree = ET.parse(filepath)
+        for run in tree.getroot().iter("run"):
+            bench = normalize_bench_path(run.get("name", ""))
+            for col in run.findall("column"):
+                if col.get("title") == "status" and col.get("value") == "true":
+                    validated.add(bench)
+                    break
+    return validated
+
+
 def collect_all_verdicts(data_dir):
     """Collect verdicts from all auto-discovered plain solver result files.
     Returns: {benchmark_path: {solver_name: verdict}}
@@ -104,18 +125,25 @@ def collect_all_verdicts(data_dir):
     return all_verdicts
 
 
-def update_xml_files(data_dir, computed_verdicts, dry_run=False, ignore_set=None):
+def update_xml_files(data_dir, computed_verdicts, dry_run=False, ignore_set=None, validated_sat=None):
     """Update expectedVerdict attributes and recompute category columns in all
     BenchExec result XML files directly inside data_dir.
 
     computed_verdicts: {benchmark_path: verdict} where verdict is
         "true", "false", or "inconsistent".
     ignore_set: set of benchmark paths to treat as neither correct nor wrong.
+    validated_sat: set of benchmark paths proven SAT by model validation.
     """
     files_updated = 0
     runs_changed = 0
     if ignore_set is None:
         ignore_set = set()
+    if validated_sat is None:
+        validated_sat = set()
+    # Merge validated SAT into computed_verdicts (override)
+    effective_verdicts = dict(computed_verdicts)
+    for bench in validated_sat:
+        effective_verdicts[bench] = "true"
 
     for fname in sorted(os.listdir(data_dir)):
         if not fname.endswith(".xml"):
@@ -148,10 +176,10 @@ def update_xml_files(data_dir, computed_verdicts, dry_run=False, ignore_set=None
                     runs_changed += 1
                 continue
 
-            if bench not in computed_verdicts:
+            if bench not in effective_verdicts:
                 continue
 
-            new_verdict = computed_verdicts[bench]  # "true", "false", or "inconsistent"
+            new_verdict = effective_verdicts[bench]  # "true", "false", or "inconsistent"
             old_expected = run.get("expectedVerdict")  # "true", "false", or None
             new_expected = new_verdict if new_verdict in ("true", "false") else None
 
@@ -247,9 +275,12 @@ def majority_vote(solver_verdicts):
         return None, [], []
 
 
-def write_yml(yml_path, data, verdict, sat_solvers, unsat_solvers):
+def write_yml(yml_path, data, verdict, sat_solvers, unsat_solvers, validated=False):
     """Write the YAML file with majority-vote verdict and solver lists as YAML entries."""
-    mv_verdict = "sat" if verdict == "true" else ("unsat" if verdict == "false" else verdict)
+    if validated:
+        mv_verdict = "sat_validated"
+    else:
+        mv_verdict = "sat" if verdict == "true" else ("unsat" if verdict == "false" else verdict)
     for prop in data.get("properties", []):
         if prop.get("property_file", "").endswith("properties/check-sat.prp"):
             prop["majority_vote_verdict"] = mv_verdict
@@ -331,15 +362,24 @@ def main():
     all_verdicts = collect_all_verdicts(results_dir)
     print(f"Found verdicts for {len(all_verdicts)} benchmarks from {len(discover_solver_files(results_dir))} solvers.")
 
+    print("Collecting validated SAT results from model-track fixed XMLs...")
+    validated_sat = collect_validated_sat(results_dir)
+    print(f"Found {len(validated_sat)} benchmarks with validated SAT proofs.")
+
     # Pre-compute all majority verdicts (used for both .yml and XML updates)
+    # Validated SAT results override whatever the majority vote says.
     computed_verdicts = {}
     for bench, solver_verdicts in all_verdicts.items():
         verdict, _, _ = majority_vote(solver_verdicts)
         if verdict is not None:
             computed_verdicts[bench] = verdict
+    # Override with validated SAT
+    for bench in validated_sat:
+        computed_verdicts[bench] = "true"
 
     stats = {"updated": 0, "added": 0, "unchanged": 0, "inconsistent": 0,
-             "no_data": 0, "missing_yml": 0}
+             "no_data": 0, "missing_yml": 0, "validated_sat": 0}
+    inconsistent_benches = []
 
     # Clean stale solver annotations from ignored benchmarks
     for bench in sorted(ignore_set):
@@ -375,11 +415,16 @@ def main():
             continue
 
         _, supporters, opposers = majority_vote(solver_verdicts)
-        if verdict in ("true", "inconsistent"):
+        is_validated = bench in validated_sat
+        if is_validated:
+            # Definitive SAT from model validation; override verdict
+            verdict = "true"
+            sat_solvers = supporters if supporters else []
+            unsat_solvers = opposers if opposers else []
+        elif verdict in ("true", "inconsistent"):
             sat_solvers, unsat_solvers = supporters, opposers
         else:
             sat_solvers, unsat_solvers = opposers, supporters
-
         with open(yml_path, "r") as f:
             data = yaml.safe_load(f)
 
@@ -394,10 +439,27 @@ def main():
 
         old_verdict = prop.get("expected_verdict")
 
+        # Validated SAT: treat as definitive, record sat_validated
+        if is_validated:
+            stats["validated_sat"] += 1
+            new_bool = True
+            if old_verdict != new_bool:
+                if old_verdict is None:
+                    stats["added"] += 1
+                else:
+                    stats["updated"] += 1
+            else:
+                stats["unchanged"] += 1
+            prop["expected_verdict"] = new_bool
+            if not args.dry_run:
+                write_yml(yml_path, data, verdict, sat_solvers, unsat_solvers, validated=True)
+            continue
+
         if verdict == "inconsistent":
             stats["inconsistent"] += 1
-            # Keep inconsistent tasks unlabeled for BenchExec compatibility.
-            prop.pop("expected_verdict", None)
+            inconsistent_benches.append((bench, sat_solvers, unsat_solvers))
+            # Use a placeholder 'true' expected_verdict for BenchExec compatibility.
+            prop["expected_verdict"] = True
             if not args.dry_run:
                 write_yml(yml_path, data, verdict, sat_solvers, unsat_solvers)
             else:
@@ -434,14 +496,21 @@ def main():
     # These keep their existing labels but we won't touch them.
 
     print("\nUpdating XML result files...")
-    update_xml_files(results_dir, computed_verdicts, dry_run=args.dry_run, ignore_set=ignore_set)
+    update_xml_files(results_dir, computed_verdicts, dry_run=args.dry_run,
+                     ignore_set=ignore_set, validated_sat=validated_sat)
 
     print(f"\n=== Summary ===")
     print(f"  Benchmarks with solver data: {len(all_verdicts)}")
+    print(f"  Validated SAT (definitive):  {stats['validated_sat']}")
     print(f"  Verdicts unchanged:          {stats['unchanged']}")
     print(f"  Verdicts added (new):        {stats['added']}")
     print(f"  Verdicts updated (changed):  {stats['updated']}")
     print(f"  Marked inconsistent:         {stats['inconsistent']}")
+    if inconsistent_benches:
+        for bench, sat_s, unsat_s in sorted(inconsistent_benches):
+            print(f"    {bench}")
+            print(f"      sat:   {', '.join(sorted(sat_s))}")
+            print(f"      unsat: {', '.join(sorted(unsat_s))}")
     print(f"  No solver produced verdict:  {stats['no_data']}")
     print(f"  Missing .yml files:          {stats['missing_yml']}")
 
