@@ -282,7 +282,7 @@ clean-tables:
 	@rm -f results/tables/*.html results/tables/*.csv
 
 relabel-verdicts:
-	@python3 majority-vote-relabel.py chc-comp26-benchmarks results
+	@python3 majority-vote-relabel.py chc-comp26-benchmarks results --ignore-list ignore.txt
 
 
 # Model verifiers: validate with validate.py, then generate per-verifier tables
@@ -443,12 +443,6 @@ prepare-pages:
 			(cd results && zip -rq "pages/$$(basename $$dir).zip" "$$(basename $$dir)"); \
 		fi; \
 	done
-	@# Copy benchmark set into pages directory
-	@if [ -e chc-comp26-benchmarks ]; then \
-		echo "Copying benchmarks..."; \
-		rm -rf results/pages/chc-comp26-benchmarks; \
-		cp -r chc-comp26-benchmarks results/pages/chc-comp26-benchmarks; \
-	fi
 	@# Generate index.html with grid layout
 	python3 ./generate_pages.py \
 		--results-dir results \

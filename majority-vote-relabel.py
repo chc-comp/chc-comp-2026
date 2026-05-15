@@ -61,7 +61,7 @@ def discover_solver_files(data_dir):
             result[solver] = per_cat[solver]
     return result
 
-BENCH_PREFIX_MARKER = "chc-comp25-benchmarks/"
+BENCH_PREFIX_MARKER = "chc-comp26-benchmarks/"
 
 
 def normalize_bench_path(name):
@@ -104,15 +104,18 @@ def collect_all_verdicts(data_dir):
     return all_verdicts
 
 
-def update_xml_files(data_dir, computed_verdicts, dry_run=False):
+def update_xml_files(data_dir, computed_verdicts, dry_run=False, ignore_set=None):
     """Update expectedVerdict attributes and recompute category columns in all
     BenchExec result XML files directly inside data_dir.
 
     computed_verdicts: {benchmark_path: verdict} where verdict is
         "true", "false", or "inconsistent".
+    ignore_set: set of benchmark paths to treat as neither correct nor wrong.
     """
     files_updated = 0
     runs_changed = 0
+    if ignore_set is None:
+        ignore_set = set()
 
     for fname in sorted(os.listdir(data_dir)):
         if not fname.endswith(".xml"):
@@ -130,6 +133,21 @@ def update_xml_files(data_dir, computed_verdicts, dry_run=False):
         file_changed = 0
         for run in root.iter("run"):
             bench = normalize_bench_path(run.get("name", ""))
+
+            # Ignored benchmarks: strip expectedVerdict and force category=unknown
+            if bench in ignore_set:
+                changed = False
+                if run.attrib.pop("expectedVerdict", None) is not None:
+                    changed = True
+                for col in run.findall("column"):
+                    if col.get("title") == "category" and col.get("value") != "unknown":
+                        col.set("value", "unknown")
+                        changed = True
+                if changed:
+                    file_changed += 1
+                    runs_changed += 1
+                continue
+
             if bench not in computed_verdicts:
                 continue
 
@@ -284,15 +302,29 @@ def compute_verdict_counts(all_verdicts, bench_to_cat, categories):
     return counts
 
 
+def load_ignore_list(path):
+    """Return a set of benchmark-relative paths to ignore."""
+    if not path or not os.path.exists(path):
+        return set()
+    with open(path) as f:
+        return {line.strip() for line in f
+                if line.strip() and not line.strip().startswith('#')}
+
+
 def main():
     parser = argparse.ArgumentParser(description="Majority-vote relabeling of CHC-COMP benchmarks")
     parser.add_argument("benchmarks_dir", help="Path to chc-comp25-benchmarks directory")
     parser.add_argument("data_dir", help="Directory containing solver result XML files")
     parser.add_argument("--dry-run", action="store_true", help="Print changes without writing files")
+    parser.add_argument("--ignore-list", default="ignore.txt",
+                        help="File listing benchmark paths to ignore (default: ignore.txt)")
     args = parser.parse_args()
 
     benchmarks_dir = args.benchmarks_dir
     results_dir = args.data_dir
+    ignore_set = load_ignore_list(args.ignore_list)
+    if ignore_set:
+        print(f"Ignoring {len(ignore_set)} benchmarks from '{args.ignore_list}'.")
     categories, bench_to_cat, cat_sizes = load_benchmark_categories(benchmarks_dir)
 
     print("Collecting verdicts from all solver result files...")
@@ -309,7 +341,29 @@ def main():
     stats = {"updated": 0, "added": 0, "unchanged": 0, "inconsistent": 0,
              "no_data": 0, "missing_yml": 0}
 
+    # Clean stale solver annotations from ignored benchmarks
+    for bench in sorted(ignore_set):
+        yml_path = os.path.join(benchmarks_dir, bench)
+        if not os.path.exists(yml_path):
+            continue
+        with open(yml_path, "r") as f:
+            data = yaml.safe_load(f)
+        changed = False
+        for prop in data.get("properties", []):
+            if not prop.get("property_file", "").endswith("properties/check-sat.prp"):
+                continue
+            for key in ("sat", "unsat", "majority_vote_verdict"):
+                if key in prop:
+                    prop.pop(key)
+                    changed = True
+        if changed and not args.dry_run:
+            with open(yml_path, "w") as f:
+                yaml.dump(data, f, default_flow_style=False)
+            print(f"  Cleaned ignored: {bench}")
+
     for bench, solver_verdicts in sorted(all_verdicts.items()):
+        if bench in ignore_set:
+            continue
         yml_path = os.path.join(benchmarks_dir, bench)
         if not os.path.exists(yml_path):
             stats["missing_yml"] += 1
@@ -380,7 +434,7 @@ def main():
     # These keep their existing labels but we won't touch them.
 
     print("\nUpdating XML result files...")
-    update_xml_files(results_dir, computed_verdicts, dry_run=args.dry_run)
+    update_xml_files(results_dir, computed_verdicts, dry_run=args.dry_run, ignore_set=ignore_set)
 
     print(f"\n=== Summary ===")
     print(f"  Benchmarks with solver data: {len(all_verdicts)}")
