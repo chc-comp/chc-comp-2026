@@ -275,7 +275,7 @@ $(foreach val,$(VALIDATORS),\
 process-results: generate-tables prepare-pages
 
 generate-tables: clean-tables relabel-verdicts model-verifier-tables plain-verifier-tables \
-	model-overall-tables plain-overall-tables cross-verifier-tables
+	model-overall-tables plain-overall-tables cross-verifier-tables cross-verifier-overall-tables
 
 clean-tables:
 	@mkdir -p results/tables
@@ -403,6 +403,32 @@ cross-verifier-tables:
 		fi; \
 	done
 
+# Overall cross-verifier comparison tables (all categories combined)
+cross-verifier-overall-tables:
+	model_inputs=""; \
+	for f in results/*-fixed.results.CHC-COMP2026_check-sat.xml; do \
+		[ -e "$$f" ] && model_inputs="$$model_inputs $$f"; \
+	done; \
+	if [ -n "$$model_inputs" ]; then \
+		echo "Generating model overall cross-verifier table"; \
+		./benchexec/bin/table-generator --no-diff \
+			--name results-overall-model \
+			--outputpath results/tables \
+			$$model_inputs; \
+	fi; \
+	solver_inputs=""; \
+	for plain_verifier in $(PLAIN_VERIFIERS); do \
+		pv_overall=$$(ls -d results/$${plain_verifier}.*results.CHC-COMP2026_check-sat.xml 2>/dev/null | sort -V | tail -n 1); \
+		[ -n "$$pv_overall" ] && solver_inputs="$$solver_inputs $$pv_overall"; \
+	done; \
+	if [ -n "$$solver_inputs" ]; then \
+		echo "Generating solver overall cross-verifier table"; \
+		./benchexec/bin/table-generator --no-diff \
+			--name results-overall-solver \
+			--outputpath results/tables \
+			$$solver_inputs; \
+	fi
+
 ############## Prepare GitHub Pages
 
 prepare-pages:
@@ -417,6 +443,12 @@ prepare-pages:
 			(cd results && zip -rq "pages/$$(basename $$dir).zip" "$$(basename $$dir)"); \
 		fi; \
 	done
+	@# Copy benchmark set into pages directory
+	@if [ -e chc-comp26-benchmarks ]; then \
+		echo "Copying benchmarks..."; \
+		rm -rf results/pages/chc-comp26-benchmarks; \
+		cp -r chc-comp26-benchmarks results/pages/chc-comp26-benchmarks; \
+	fi
 	@# Generate index.html with grid layout
 	python3 ./generate_pages.py \
 		--results-dir results \
