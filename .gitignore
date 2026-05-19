@@ -3,6 +3,7 @@ sv-benchmarks
 chc-comp26-benchmarks*
 benchexec
 results
+generated
 .idea
 .vscode
 experiment-*

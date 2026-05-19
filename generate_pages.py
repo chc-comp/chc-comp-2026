@@ -14,6 +14,8 @@ import glob
 import os
 import xml.etree.ElementTree as ET
 
+from configs import read_hors_concours
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -250,15 +252,6 @@ HC_INFO = (
     "context for other participants. "
     "It is excluded from medal rankings."
 )
-
-
-def read_hors_concours(path='hors_concours.txt'):
-    """Return the set of hors concours tool basenames from the text file."""
-    if not os.path.exists(path):
-        return set()
-    with open(path) as f:
-        return {line.strip() for line in f
-                if line.strip() and not line.strip().startswith('#')}
 
 
 def cell_data_attrs(counts):

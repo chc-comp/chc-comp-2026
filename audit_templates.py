@@ -18,6 +18,8 @@ import sys
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 
+from configs import RESOURCE_LIMITS as EXPECTED_LIMITS
+
 
 def validate_dtd(template_dir, dtd_path):
     """Validate every .xml.template against its declared DTD using xmllint."""
@@ -32,14 +34,6 @@ def validate_dtd(template_dir, dtd_path):
         if result.returncode != 0:
             errors.append((name, result.stderr.strip()))
     return errors
-
-
-EXPECTED_LIMITS = {
-    'timelimit': '30 min',
-    'hardtimelimit': '30 min',
-    'cpuCores': '8',
-    'memlimit': '30 GB',
-}
 
 
 def check_resource_limits(template_dir):

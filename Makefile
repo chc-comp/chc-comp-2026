@@ -272,14 +272,19 @@ $(foreach val,$(VALIDATORS),\
 
 ############## Process Results
 
-process-results: generate-tables prepare-pages
+process-results: generate-tables prepare-pages generate-statistics
+
+generate-statistics:
+	@mkdir -p generated/statistics
+	python3 ./generate-statistics.py results generated/statistics \
+		$(if $(wildcard chc-comp26-benchmarks/*.set),--benchmarks-dir chc-comp26-benchmarks)
 
 generate-tables: clean-tables relabel-verdicts model-verifier-tables plain-verifier-tables \
 	model-overall-tables plain-overall-tables cross-verifier-tables cross-verifier-overall-tables
 
 clean-tables:
-	@mkdir -p results/tables
-	@rm -f results/tables/*.html results/tables/*.csv
+	@mkdir -p generated/tables
+	@rm -f generated/tables/*.html generated/tables/*.csv
 
 relabel-verdicts:
 	@python3 majority-vote-relabel.py chc-comp26-benchmarks results --ignore-list ignore.txt
@@ -311,7 +316,7 @@ model-verifier-tables:
 				"$$verifier_latest" $$validator_args; \
 			./benchexec/bin/table-generator --no-diff \
 				--name results-$${model_verifier}-model-$${category} \
-				--outputpath results/tables \
+				--outputpath generated/tables \
 				"results/$${model_verifier}-fixed.results.CHC-COMP2026_check-sat.$${category}.xml" $$validator_args; \
 		done; \
 	done
@@ -326,7 +331,7 @@ plain-verifier-tables:
 			echo "Generating table: $${plain_verifier} / $${category}"; \
 			./benchexec/bin/table-generator --no-diff \
 				--name results-$${plain_verifier}-$${category} \
-				--outputpath results/tables \
+			--outputpath generated/tables \
 				"$$verifier_latest"; \
 		done; \
 	done
@@ -350,7 +355,7 @@ model-overall-tables:
 			"$$verifier_overall" $$validator_args; \
 		./benchexec/bin/table-generator --no-diff \
 			--name results-$${model_verifier}-model-overall \
-			--outputpath results/tables \
+			--outputpath generated/tables \
 			"results/$${model_verifier}-fixed.results.CHC-COMP2026_check-sat.xml" $$validator_args; \
 	done
 
@@ -362,7 +367,7 @@ plain-overall-tables:
 		echo "Generating overall table: $${plain_verifier}"; \
 		./benchexec/bin/table-generator --no-diff \
 			--name results-$${plain_verifier}-overall \
-			--outputpath results/tables \
+			--outputpath generated/tables \
 			"$$verifier_overall"; \
 	done
 
@@ -386,7 +391,7 @@ cross-verifier-tables:
 			echo "Generating model cross-verifier table: $${category}"; \
 			./benchexec/bin/table-generator --no-diff \
 				--name results-$${category}-model \
-				--outputpath results/tables \
+				--outputpath generated/tables \
 				$$model_inputs; \
 		fi; \
 		solver_inputs=""; \
@@ -398,7 +403,7 @@ cross-verifier-tables:
 			echo "Generating solver cross-verifier table: $${category}"; \
 			./benchexec/bin/table-generator --no-diff \
 				--name results-$${category}-solver \
-				--outputpath results/tables \
+				--outputpath generated/tables \
 				$$solver_inputs; \
 		fi; \
 	done
@@ -413,7 +418,7 @@ cross-verifier-overall-tables:
 		echo "Generating model overall cross-verifier table"; \
 		./benchexec/bin/table-generator --no-diff \
 			--name results-overall-model \
-			--outputpath results/tables \
+			--outputpath generated/tables \
 			$$model_inputs; \
 	fi; \
 	solver_inputs=""; \
@@ -425,7 +430,7 @@ cross-verifier-overall-tables:
 		echo "Generating solver overall cross-verifier table"; \
 		./benchexec/bin/table-generator --no-diff \
 			--name results-overall-solver \
-			--outputpath results/tables \
+			--outputpath generated/tables \
 			$$solver_inputs; \
 	fi
 
@@ -433,21 +438,21 @@ cross-verifier-overall-tables:
 
 prepare-pages:
 	@echo "Preparing GitHub Pages deployment..."
-	@mkdir -p results/pages/tables
+	@mkdir -p generated/pages/tables
 	@# Copy HTML table files
-	@cp results/tables/*.html results/pages/tables/ 2>/dev/null || true
+	@cp generated/tables/*.html generated/pages/tables/ 2>/dev/null || true
 	@# Zip logfile directories (following symlinks) and place alongside tables
 	@for dir in results/*.logfiles; do \
 		if [ -d "$$dir" ]; then \
 			echo "Zipping $$(basename $$dir)..."; \
-			(cd results && zip -rq "pages/$$(basename $$dir).zip" "$$(basename $$dir)"); \
+			(cd results && zip -rq "../generated/pages/$$(basename $$dir).zip" "$$(basename $$dir)"); \
 		fi; \
 	done
 	@# Generate index.html with grid layout
 	python3 ./generate_pages.py \
 		--results-dir results \
-		--tables-dir results/pages/tables \
-		--output results/pages/tables/index.html \
+		--tables-dir generated/pages/tables \
+		--output generated/pages/tables/index.html \
 		--model-verifiers $(MODEL_VERIFIERS) \
 		--plain-verifiers $(PLAIN_VERIFIERS)
-	@echo "Pages ready at results/pages/"
+	@echo "Pages ready at generated/pages/"

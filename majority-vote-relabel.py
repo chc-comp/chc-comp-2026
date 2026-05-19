@@ -21,17 +21,18 @@ Example:
 import argparse
 import io
 import os
-import re
 import sys
 import xml.etree.ElementTree as ET
 import yaml
 from collections import defaultdict
 
-
-# Pattern matching plain solver result files (not model-gen, validator, or fixed)
-_PLAIN_RESULT_RE = re.compile(
-    r'^([a-z0-9]+)\.\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}'
-    r'\.results\.CHC-COMP2026_check-sat(?:\.([^.]+))?\.xml$'
+from configs import (
+    CATEGORIES,
+    BENCH_PREFIX_MARKER,
+    normalize_bench_path,
+    PLAIN_RESULT_RE as _PLAIN_RESULT_RE,
+    FIXED_RE as _FIXED_RE,
+    RELABEL_BY_MAJORITY_VOTE,
 )
 
 
@@ -61,19 +62,6 @@ def discover_solver_files(data_dir):
             result[solver] = per_cat[solver]
     return result
 
-BENCH_PREFIX_MARKER = "chc-comp26-benchmarks/"
-
-
-def normalize_bench_path(name):
-    """Extract the benchmark-relative path from an XML run name attribute.
-    E.g. '../../../chc-comp25-benchmarks/foo/bar.yml' -> 'foo/bar.yml'
-    """
-    idx = name.find(BENCH_PREFIX_MARKER)
-    if idx >= 0:
-        return name[idx + len(BENCH_PREFIX_MARKER):]
-    return name
-
-
 def parse_result_xml(filepath):
     """Parse a BenchExec XML result file, returning {benchmark_path: verdict}."""
     results = {}
@@ -96,9 +84,8 @@ def collect_validated_sat(data_dir):
     Returns: set of benchmark_path strings.
     """
     validated = set()
-    fixed_re = re.compile(r'^[a-z0-9]+-fixed\.results\.CHC-COMP2026_check-sat.*\.xml$')
     for fname in sorted(os.listdir(data_dir)):
-        if not fixed_re.match(fname):
+        if not _FIXED_RE.match(fname):
             continue
         filepath = os.path.join(data_dir, fname)
         tree = ET.parse(filepath)
@@ -299,10 +286,7 @@ def write_yml(yml_path, data, verdict, sat_solvers, unsat_solvers, validated=Fal
 
 def load_benchmark_categories(benchmarks_dir):
     """Build benchmark -> category mapping from .set files."""
-    categories = [
-        "ADT-LIA-Arrays", "ADT-LIA", "BV", "LIA-Arrays",
-        "LIA-Lin-Arrays", "LIA-Lin", "LIA", "LRA-Lin",
-    ]
+    categories = list(CATEGORIES)
     bench_to_cat = {}
     cat_sizes = {}
     for cat in categories:
@@ -310,7 +294,7 @@ def load_benchmark_categories(benchmarks_dir):
         if not os.path.exists(set_file):
             continue
         with open(set_file) as f:
-            benches = [line.strip() for line in f if line.strip()]
+            benches = [line.strip().removeprefix("./") for line in f if line.strip()]
         cat_sizes[cat] = len(benches)
         for bench in benches:
             bench_to_cat[bench] = cat
@@ -333,6 +317,35 @@ def compute_verdict_counts(all_verdicts, bench_to_cat, categories):
     return counts
 
 
+def load_verdicts_from_benchmarks(benchmarks_dir, bench_to_cat):
+    """Load expected verdicts directly from benchmark .yml files.
+
+    Iterates over every benchmark listed in the category .set files,
+    reads its .yml, and extracts the ``expected_verdict`` field from the
+    check-sat property block.
+
+    Returns {benchmark_path: "true" | "false"}.
+    Benchmarks with no expected_verdict set are omitted.
+    """
+    verdicts = {}
+    for bench in bench_to_cat:
+        yml_path = os.path.join(benchmarks_dir, bench)
+        if not os.path.exists(yml_path):
+            continue
+        with open(yml_path, "r") as f:
+            data = yaml.safe_load(f)
+        for prop in data.get("properties", []):
+            if not prop.get("property_file", "").endswith("properties/check-sat.prp"):
+                continue
+            ev = prop.get("expected_verdict")
+            if ev is True:
+                verdicts[bench] = "true"
+            elif ev is False:
+                verdicts[bench] = "false"
+            break
+    return verdicts
+
+
 def load_ignore_list(path):
     """Return a set of benchmark-relative paths to ignore."""
     if not path or not os.path.exists(path):
@@ -344,12 +357,22 @@ def load_ignore_list(path):
 
 def main():
     parser = argparse.ArgumentParser(description="Majority-vote relabeling of CHC-COMP benchmarks")
-    parser.add_argument("benchmarks_dir", help="Path to chc-comp25-benchmarks directory")
+    parser.add_argument("benchmarks_dir", help="Path to chc-comp26-benchmarks directory")
     parser.add_argument("data_dir", help="Directory containing solver result XML files")
     parser.add_argument("--dry-run", action="store_true", help="Print changes without writing files")
     parser.add_argument("--ignore-list", default="ignore.txt",
                         help="File listing benchmark paths to ignore (default: ignore.txt)")
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument(
+        "--vote", dest="use_vote", action="store_true", default=None,
+        help="Force majority-vote mode (overrides configs.RELABEL_BY_MAJORITY_VOTE)")
+    mode_group.add_argument(
+        "--from-benchmarks", dest="use_vote", action="store_false",
+        help="Force from-benchmarks mode: read expected verdicts from .yml files "
+             "and only update XML result files (overrides configs.RELABEL_BY_MAJORITY_VOTE)")
     args = parser.parse_args()
+    # Effective mode: CLI flag takes precedence over the config toggle.
+    use_vote = RELABEL_BY_MAJORITY_VOTE if args.use_vote is None else args.use_vote
 
     benchmarks_dir = args.benchmarks_dir
     results_dir = args.data_dir
@@ -358,28 +381,48 @@ def main():
         print(f"Ignoring {len(ignore_set)} benchmarks from '{args.ignore_list}'.")
     categories, bench_to_cat, cat_sizes = load_benchmark_categories(benchmarks_dir)
 
-    print("Collecting verdicts from all solver result files...")
-    all_verdicts = collect_all_verdicts(results_dir)
-    print(f"Found verdicts for {len(all_verdicts)} benchmarks from {len(discover_solver_files(results_dir))} solvers.")
-
     print("Collecting validated SAT results from model-track fixed XMLs...")
     validated_sat = collect_validated_sat(results_dir)
     print(f"Found {len(validated_sat)} benchmarks with validated SAT proofs.")
 
-    # Pre-compute all majority verdicts (used for both .yml and XML updates)
-    # Validated SAT results override whatever the majority vote says.
-    computed_verdicts = {}
-    for bench, solver_verdicts in all_verdicts.items():
-        verdict, _, _ = majority_vote(solver_verdicts)
-        if verdict is not None:
-            computed_verdicts[bench] = verdict
-    # Override with validated SAT
-    for bench in validated_sat:
-        computed_verdicts[bench] = "true"
+    if use_vote:
+        print("Mode: majority vote (will update .yml files and XML result files)")
+        print("Collecting verdicts from all solver result files...")
+        all_verdicts = collect_all_verdicts(results_dir)
+        print(f"Found verdicts for {len(all_verdicts)} benchmarks "
+              f"from {len(discover_solver_files(results_dir))} solvers.")
+        # Pre-compute all majority verdicts; validated SAT overrides.
+        computed_verdicts = {}
+        for bench, solver_verdicts in all_verdicts.items():
+            verdict, _, _ = majority_vote(solver_verdicts)
+            if verdict is not None:
+                computed_verdicts[bench] = verdict
+        for bench in validated_sat:
+            computed_verdicts[bench] = "true"
+    else:
+        print("Mode: from benchmarks (reading expected verdicts from .yml files; "
+              "only XML result files will be updated)")
+        computed_verdicts = load_verdicts_from_benchmarks(benchmarks_dir, bench_to_cat)
+        print(f"Loaded expected verdicts for {len(computed_verdicts)} benchmarks "
+              f"from .yml files.")
+        # Validated SAT still overrides as a belt-and-suspenders check.
+        for bench in validated_sat:
+            computed_verdicts[bench] = "true"
+        all_verdicts = {}  # not used in this mode
 
     stats = {"updated": 0, "added": 0, "unchanged": 0, "inconsistent": 0,
              "no_data": 0, "missing_yml": 0, "validated_sat": 0}
     inconsistent_benches = []
+
+    if not use_vote:
+        # Skip .yml updates entirely; go straight to XML patching.
+        print("\nUpdating XML result files...")
+        update_xml_files(results_dir, computed_verdicts, dry_run=args.dry_run,
+                         ignore_set=ignore_set, validated_sat=validated_sat)
+        print(f"\n=== Summary ===")
+        print(f"  Verdicts loaded from benchmarks: {len(computed_verdicts)}")
+        print(f"  Validated SAT (override):        {len(validated_sat)}")
+        return
 
     # Clean stale solver annotations from ignored benchmarks
     for bench in sorted(ignore_set):
