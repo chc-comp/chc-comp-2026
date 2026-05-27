@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>CHC-COMP 2026 Results</title>
+<style>
+body { font-family: sans-serif; max-width: 1600px; margin: 2em auto; padding: 0 1em; }
+h1 { border-bottom: 2px solid #333; padding-bottom: .3em; }
+h2 { margin-top: 1.5em; }
+table { border-collapse: collapse; margin: 1em 0; }
+th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: center; white-space: nowrap; }
+th { background: #f5f5f5; }
+td:first-child, th:first-child { text-align: left; font-weight: bold; }
+a { color: #0366d6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.no-data { color: #999; }
+.score-cell { display: inline-block; }
+.score-value { font-weight: bold; font-size: 1.05em; }
+.medal { font-size: 1.1em; margin-right: 2px; }
+.counts { font-size: 0.85em; color: #555; }
+.scoring-bar { display: flex; align-items: center; gap: 0.7em; margin: 1em 0 0.5em 0;
+               background: #f8f8f8; border: 1px solid #ddd; border-radius: 6px;
+               padding: 0.5em 1em; width: fit-content; }
+.scoring-bar label { font-weight: bold; }
+.scoring-bar select { font-size: 0.95em; padding: 2px 6px; }
+.info-icon { display: inline-flex; align-items: center; justify-content: center;
+             width: 1.3em; height: 1.3em; border-radius: 50%;
+             background: #0366d6; color: white; font-size: 0.78em;
+             cursor: help; font-style: normal; font-weight: bold;
+             border: none; padding: 0; flex-shrink: 0; }
+tr.hors-concours { font-style: italic; color: #555; }
+tr.hors-concours td:first-child { font-weight: normal; }
+.hc-label { font-size: 0.78em; color: #888; font-style: normal; }
+.banner-uncertified {
+  background: #d4edda; border: 2px solid #28a745; border-radius: 6px;
+  padding: 0.7em 1.2em; margin-bottom: 1.2em;
+  font-size: 1em; color: #155724;
+  display: flex; align-items: center; gap: 0.6em;
+}
+.banner-uncertified .banner-icon { font-size: 1.4em; }
+</style>
+</head><body>
+<h1>CHC-COMP 2026 Results</h1>
+<div class="banner-uncertified"><span class="banner-icon">&#x2705;</span><strong>These results have been certified by all participants.</strong></div>
+<p>Each cell shows the <em>score</em> (bold) and <em>correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</em> task counts. Click a cell to view the detailed table. Category headers link to cross-verifier comparison tables.</p>
+<div class="scoring-bar">
+<label for="scoring-mode">Scoring:</label>
+<select id="scoring-mode"><option value="ignore">Ignore wrong results</option><option value="punish">Punish wrong results</option><option value="assume">Assume all correct</option></select>
+<i class="info-icon" title="Scoring options:&#10;• Ignore wrong (default): score = correct&#10;• Punish wrong: score = correct − 64×wrong&#10;• Assume all correct: score = correct + wrong&#10;&#10;Rankings per column are awarded dynamically based on the selected score. Only solvers with score > 0 receive medals. Hors concours solvers are excluded from medals.">i</i>
+</div>
+<h2>Solver Track (check-sat)</h2>
+<table>
+<tr><th>Tool</th>
+<th data-col-id="solver-ADT-LIA"><a href="results-ADT-LIA-solver.table.html">ADT-LIA</a></th>
+<th data-col-id="solver-ADT-LIA-Arrays"><a href="results-ADT-LIA-Arrays-solver.table.html">ADT-LIA-Arrays</a></th>
+<th data-col-id="solver-BV"><a href="results-BV-solver.table.html">BV</a></th>
+<th data-col-id="solver-BV-Lin"><a href="results-BV-Lin-solver.table.html">BV-Lin</a></th>
+<th data-col-id="solver-LIA"><a href="results-LIA-solver.table.html">LIA</a></th>
+<th data-col-id="solver-LIA-Arrays"><a href="results-LIA-Arrays-solver.table.html">LIA-Arrays</a></th>
+<th data-col-id="solver-LIA-Lin"><a href="results-LIA-Lin-solver.table.html">LIA-Lin</a></th>
+<th data-col-id="solver-LIA-Lin-Arrays"><a href="results-LIA-Lin-Arrays-solver.table.html">LIA-Lin-Arrays</a></th>
+<th data-col-id="solver-LRA-Lin"><a href="results-LRA-Lin-solver.table.html">LRA-Lin</a></th>
+<th data-col-id="solver-overall"><a href="results-overall-solver.table.html">Overall</a></th>
+</tr>
+<tr><td></td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+</tr>
+<tr><td>chococatalia</td>
+<td><a href="results-chococatalia-ADT-LIA.html"><span class="score-cell" data-col-id="solver-ADT-LIA" data-correct="482" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">482&nbsp;/&nbsp;0&nbsp;/&nbsp;1131</span></span></a></td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+</tr>
+<tr><td>eldarica</td>
+<td><a href="results-eldarica-ADT-LIA.html"><span class="score-cell" data-col-id="solver-ADT-LIA" data-correct="240" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">240&nbsp;/&nbsp;0&nbsp;/&nbsp;1131</span></span></a></td>
+<td><a href="results-eldarica-ADT-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-ADT-LIA-Arrays" data-correct="3392" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">3392&nbsp;/&nbsp;0&nbsp;/&nbsp;3607</span></span></a></td>
+<td><a href="results-eldarica-BV.html"><span class="score-cell" data-col-id="solver-BV" data-correct="77" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">77&nbsp;/&nbsp;0&nbsp;/&nbsp;96</span></span></a></td>
+<td><a href="results-eldarica-BV-Lin.html"><span class="score-cell" data-col-id="solver-BV-Lin" data-correct="292" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">292&nbsp;/&nbsp;0&nbsp;/&nbsp;512</span></span></a></td>
+<td><a href="results-eldarica-LIA.html"><span class="score-cell" data-col-id="solver-LIA" data-correct="1048" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1048&nbsp;/&nbsp;0&nbsp;/&nbsp;1287</span></span></a></td>
+<td><a href="results-eldarica-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Arrays" data-correct="1713" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1713&nbsp;/&nbsp;0&nbsp;/&nbsp;1738</span></span></a></td>
+<td><a href="results-eldarica-LIA-Lin.html"><span class="score-cell" data-col-id="solver-LIA-Lin" data-correct="972" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">972&nbsp;/&nbsp;0&nbsp;/&nbsp;1406</span></span></a></td>
+<td><a href="results-eldarica-LIA-Lin-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Lin-Arrays" data-correct="77" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">77&nbsp;/&nbsp;0&nbsp;/&nbsp;139</span></span></a></td>
+<td><a href="results-eldarica-LRA-Lin.html"><span class="score-cell" data-col-id="solver-LRA-Lin" data-correct="81" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">81&nbsp;/&nbsp;0&nbsp;/&nbsp;277</span></span></a></td>
+<td><a href="results-eldarica-overall.html"><span class="score-cell" data-col-id="solver-overall" data-correct="7892" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">7892&nbsp;/&nbsp;0&nbsp;/&nbsp;10193</span></span></a></td>
+</tr>
+<tr><td>golem</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td><a href="results-golem-LIA.html"><span class="score-cell" data-col-id="solver-LIA" data-correct="1196" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1196&nbsp;/&nbsp;0&nbsp;/&nbsp;1287</span></span></a></td>
+<td class="no-data">-</td>
+<td><a href="results-golem-LIA-Lin.html"><span class="score-cell" data-col-id="solver-LIA-Lin" data-correct="1259" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1259&nbsp;/&nbsp;0&nbsp;/&nbsp;1406</span></span></a></td>
+<td><a href="results-golem-LIA-Lin-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Lin-Arrays" data-correct="47" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">47&nbsp;/&nbsp;0&nbsp;/&nbsp;139</span></span></a></td>
+<td><a href="results-golem-LRA-Lin.html"><span class="score-cell" data-col-id="solver-LRA-Lin" data-correct="242" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">242&nbsp;/&nbsp;0&nbsp;/&nbsp;277</span></span></a></td>
+<td><a href="results-golem-overall.html"><span class="score-cell" data-col-id="solver-overall" data-correct="2744" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">2744&nbsp;/&nbsp;0&nbsp;/&nbsp;3109</span></span></a></td>
+</tr>
+<tr><td>loat</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td><a href="results-loat-LIA-Lin.html"><span class="score-cell" data-col-id="solver-LIA-Lin" data-correct="1221" data-wrong="5"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1221&nbsp;/&nbsp;5&nbsp;/&nbsp;1406</span></span></a></td>
+<td><a href="results-loat-LIA-Lin-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Lin-Arrays" data-correct="52" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">52&nbsp;/&nbsp;0&nbsp;/&nbsp;139</span></span></a></td>
+<td class="no-data">-</td>
+<td><a href="results-loat-overall.html"><span class="score-cell" data-col-id="solver-overall" data-correct="1273" data-wrong="5"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1273&nbsp;/&nbsp;5&nbsp;/&nbsp;1545</span></span></a></td>
+</tr>
+<tr><td>mucyc</td>
+<td><a href="results-mucyc-ADT-LIA.html"><span class="score-cell" data-col-id="solver-ADT-LIA" data-correct="73" data-wrong="13"><span class="medal"></span><span class="score-value"></span><br><span class="counts">73&nbsp;/&nbsp;13&nbsp;/&nbsp;928</span></span></a></td>
+<td><a href="results-mucyc-ADT-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-ADT-LIA-Arrays" data-correct="1317" data-wrong="1"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1317&nbsp;/&nbsp;1&nbsp;/&nbsp;2470</span></span></a></td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td><a href="results-mucyc-LIA.html"><span class="score-cell" data-col-id="solver-LIA" data-correct="1014" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1014&nbsp;/&nbsp;0&nbsp;/&nbsp;1287</span></span></a></td>
+<td><a href="results-mucyc-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Arrays" data-correct="1532" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1532&nbsp;/&nbsp;0&nbsp;/&nbsp;1738</span></span></a></td>
+<td><a href="results-mucyc-LIA-Lin.html"><span class="score-cell" data-col-id="solver-LIA-Lin" data-correct="1160" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1160&nbsp;/&nbsp;0&nbsp;/&nbsp;1406</span></span></a></td>
+<td><a href="results-mucyc-LIA-Lin-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Lin-Arrays" data-correct="54" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">54&nbsp;/&nbsp;0&nbsp;/&nbsp;139</span></span></a></td>
+<td><a href="results-mucyc-LRA-Lin.html"><span class="score-cell" data-col-id="solver-LRA-Lin" data-correct="75" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">75&nbsp;/&nbsp;0&nbsp;/&nbsp;277</span></span></a></td>
+<td><a href="results-mucyc-overall.html"><span class="score-cell" data-col-id="solver-overall" data-correct="5225" data-wrong="14"><span class="medal"></span><span class="score-value"></span><br><span class="counts">5225&nbsp;/&nbsp;14&nbsp;/&nbsp;8245</span></span></a></td>
+</tr>
+<tr><td>pcsat</td>
+<td><a href="results-pcsat-ADT-LIA.html"><span class="score-cell" data-col-id="solver-ADT-LIA" data-correct="230" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">230&nbsp;/&nbsp;0&nbsp;/&nbsp;1131</span></span></a></td>
+<td><a href="results-pcsat-ADT-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-ADT-LIA-Arrays" data-correct="2683" data-wrong="2"><span class="medal"></span><span class="score-value"></span><br><span class="counts">2683&nbsp;/&nbsp;2&nbsp;/&nbsp;3607</span></span></a></td>
+<td><a href="results-pcsat-BV.html"><span class="score-cell" data-col-id="solver-BV" data-correct="14" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">14&nbsp;/&nbsp;0&nbsp;/&nbsp;96</span></span></a></td>
+<td><a href="results-pcsat-BV-Lin.html"><span class="score-cell" data-col-id="solver-BV-Lin" data-correct="140" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">140&nbsp;/&nbsp;0&nbsp;/&nbsp;512</span></span></a></td>
+<td><a href="results-pcsat-LIA.html"><span class="score-cell" data-col-id="solver-LIA" data-correct="1004" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1004&nbsp;/&nbsp;0&nbsp;/&nbsp;1287</span></span></a></td>
+<td><a href="results-pcsat-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Arrays" data-correct="1607" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1607&nbsp;/&nbsp;0&nbsp;/&nbsp;1738</span></span></a></td>
+<td><a href="results-pcsat-LIA-Lin.html"><span class="score-cell" data-col-id="solver-LIA-Lin" data-correct="806" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">806&nbsp;/&nbsp;0&nbsp;/&nbsp;1406</span></span></a></td>
+<td><a href="results-pcsat-LIA-Lin-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Lin-Arrays" data-correct="43" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">43&nbsp;/&nbsp;0&nbsp;/&nbsp;139</span></span></a></td>
+<td><a href="results-pcsat-LRA-Lin.html"><span class="score-cell" data-col-id="solver-LRA-Lin" data-correct="6" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">6&nbsp;/&nbsp;0&nbsp;/&nbsp;277</span></span></a></td>
+<td><a href="results-pcsat-overall.html"><span class="score-cell" data-col-id="solver-overall" data-correct="6533" data-wrong="2"><span class="medal"></span><span class="score-value"></span><br><span class="counts">6533&nbsp;/&nbsp;2&nbsp;/&nbsp;10193</span></span></a></td>
+</tr>
+<tr class="hors-concours"><td>spacer<br><small class="hc-label">hors concours&nbsp;<i class="info-icon" title="This solver did not officially enter the competition. It was included by the organizers to provide meaningful context for other participants. It is excluded from medal rankings.">i</i></small></td>
+<td><a href="results-spacer-ADT-LIA.html"><span class="score-cell" data-col-id="solver-ADT-LIA" data-correct="389" data-wrong="1" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">389&nbsp;/&nbsp;1&nbsp;/&nbsp;1131</span></span></a></td>
+<td><a href="results-spacer-ADT-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-ADT-LIA-Arrays" data-correct="3355" data-wrong="1" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">3355&nbsp;/&nbsp;1&nbsp;/&nbsp;3607</span></span></a></td>
+<td><a href="results-spacer-BV.html"><span class="score-cell" data-col-id="solver-BV" data-correct="57" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">57&nbsp;/&nbsp;0&nbsp;/&nbsp;96</span></span></a></td>
+<td><a href="results-spacer-BV-Lin.html"><span class="score-cell" data-col-id="solver-BV-Lin" data-correct="308" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">308&nbsp;/&nbsp;0&nbsp;/&nbsp;512</span></span></a></td>
+<td><a href="results-spacer-LIA.html"><span class="score-cell" data-col-id="solver-LIA" data-correct="1220" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1220&nbsp;/&nbsp;0&nbsp;/&nbsp;1287</span></span></a></td>
+<td><a href="results-spacer-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Arrays" data-correct="1710" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1710&nbsp;/&nbsp;0&nbsp;/&nbsp;1738</span></span></a></td>
+<td><a href="results-spacer-LIA-Lin.html"><span class="score-cell" data-col-id="solver-LIA-Lin" data-correct="1181" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1181&nbsp;/&nbsp;0&nbsp;/&nbsp;1406</span></span></a></td>
+<td><a href="results-spacer-LIA-Lin-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Lin-Arrays" data-correct="45" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">45&nbsp;/&nbsp;0&nbsp;/&nbsp;139</span></span></a></td>
+<td><a href="results-spacer-LRA-Lin.html"><span class="score-cell" data-col-id="solver-LRA-Lin" data-correct="176" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">176&nbsp;/&nbsp;0&nbsp;/&nbsp;277</span></span></a></td>
+<td><a href="results-spacer-overall.html"><span class="score-cell" data-col-id="solver-overall" data-correct="8441" data-wrong="2" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">8441&nbsp;/&nbsp;2&nbsp;/&nbsp;10193</span></span></a></td>
+</tr>
+<tr><td>theta</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td><a href="results-theta-BV.html"><span class="score-cell" data-col-id="solver-BV" data-correct="0" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">0&nbsp;/&nbsp;0&nbsp;/&nbsp;68</span></span></a></td>
+<td><a href="results-theta-BV-Lin.html"><span class="score-cell" data-col-id="solver-BV-Lin" data-correct="61" data-wrong="8"><span class="medal"></span><span class="score-value"></span><br><span class="counts">61&nbsp;/&nbsp;8&nbsp;/&nbsp;286</span></span></a></td>
+<td><a href="results-theta-LIA.html"><span class="score-cell" data-col-id="solver-LIA" data-correct="59" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">59&nbsp;/&nbsp;0&nbsp;/&nbsp;839</span></span></a></td>
+<td><a href="results-theta-LIA-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Arrays" data-correct="882" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">882&nbsp;/&nbsp;0&nbsp;/&nbsp;1054</span></span></a></td>
+<td><a href="results-theta-LIA-Lin.html"><span class="score-cell" data-col-id="solver-LIA-Lin" data-correct="625" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">625&nbsp;/&nbsp;0&nbsp;/&nbsp;984</span></span></a></td>
+<td><a href="results-theta-LIA-Lin-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Lin-Arrays" data-correct="56" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">56&nbsp;/&nbsp;0&nbsp;/&nbsp;115</span></span></a></td>
+<td><a href="results-theta-LRA-Lin.html"><span class="score-cell" data-col-id="solver-LRA-Lin" data-correct="67" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">67&nbsp;/&nbsp;0&nbsp;/&nbsp;240</span></span></a></td>
+<td><a href="results-theta-overall.html"><span class="score-cell" data-col-id="solver-overall" data-correct="1750" data-wrong="8"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1750&nbsp;/&nbsp;8&nbsp;/&nbsp;3586</span></span></a></td>
+</tr>
+<tr><td>z4</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td><a href="results-z4-BV-Lin.html"><span class="score-cell" data-col-id="solver-BV-Lin" data-correct="52" data-wrong="1"><span class="medal"></span><span class="score-value"></span><br><span class="counts">52&nbsp;/&nbsp;1&nbsp;/&nbsp;512</span></span></a></td>
+<td><a href="results-z4-LIA.html"><span class="score-cell" data-col-id="solver-LIA" data-correct="27" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">27&nbsp;/&nbsp;0&nbsp;/&nbsp;1287</span></span></a></td>
+<td class="no-data">-</td>
+<td><a href="results-z4-LIA-Lin.html"><span class="score-cell" data-col-id="solver-LIA-Lin" data-correct="127" data-wrong="2"><span class="medal"></span><span class="score-value"></span><br><span class="counts">127&nbsp;/&nbsp;2&nbsp;/&nbsp;1406</span></span></a></td>
+<td><a href="results-z4-LIA-Lin-Arrays.html"><span class="score-cell" data-col-id="solver-LIA-Lin-Arrays" data-correct="8" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">8&nbsp;/&nbsp;0&nbsp;/&nbsp;139</span></span></a></td>
+<td class="no-data">-</td>
+<td><a href="results-z4-overall.html"><span class="score-cell" data-col-id="solver-overall" data-correct="214" data-wrong="3"><span class="medal"></span><span class="score-value"></span><br><span class="counts">214&nbsp;/&nbsp;3&nbsp;/&nbsp;3344</span></span></a></td>
+</tr>
+</table>
+<h2>Model Track (check-sat with model generation)</h2>
+<table>
+<tr><th>Tool</th>
+<th data-col-id="model-ADT-LIA"><a href="results-ADT-LIA-model.table.html">ADT-LIA</a></th>
+<th data-col-id="model-ADT-LIA-Arrays"><a href="results-ADT-LIA-Arrays-model.table.html">ADT-LIA-Arrays</a></th>
+<th data-col-id="model-BV"><a href="results-BV-model.table.html">BV</a></th>
+<th data-col-id="model-BV-Lin"><a href="results-BV-Lin-model.table.html">BV-Lin</a></th>
+<th data-col-id="model-LIA"><a href="results-LIA-model.table.html">LIA</a></th>
+<th data-col-id="model-LIA-Arrays"><a href="results-LIA-Arrays-model.table.html">LIA-Arrays</a></th>
+<th data-col-id="model-LIA-Lin"><a href="results-LIA-Lin-model.table.html">LIA-Lin</a></th>
+<th data-col-id="model-LIA-Lin-Arrays"><a href="results-LIA-Lin-Arrays-model.table.html">LIA-Lin-Arrays</a></th>
+<th data-col-id="model-LRA-Lin"><a href="results-LRA-Lin-model.table.html">LRA-Lin</a></th>
+<th data-col-id="model-overall"><a href="results-overall-model.table.html">Overall</a></th>
+</tr>
+<tr><td></td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+<td style="font-size:0.8em;color:#666">score&nbsp;/&nbsp;correct&nbsp;/&nbsp;wrong&nbsp;/&nbsp;total</td>
+</tr>
+<tr><td>eldarica</td>
+<td><a href="results-eldarica-model-ADT-LIA.table.html"><span class="score-cell" data-col-id="model-ADT-LIA" data-correct="61" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">61&nbsp;/&nbsp;0&nbsp;/&nbsp;928</span></span></a></td>
+<td><a href="results-eldarica-model-ADT-LIA-Arrays.table.html"><span class="score-cell" data-col-id="model-ADT-LIA-Arrays" data-correct="2220" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">2220&nbsp;/&nbsp;0&nbsp;/&nbsp;2470</span></span></a></td>
+<td><a href="results-eldarica-model-BV.table.html"><span class="score-cell" data-col-id="model-BV" data-correct="26" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">26&nbsp;/&nbsp;0&nbsp;/&nbsp;68</span></span></a></td>
+<td><a href="results-eldarica-model-BV-Lin.table.html"><span class="score-cell" data-col-id="model-BV-Lin" data-correct="114" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">114&nbsp;/&nbsp;0&nbsp;/&nbsp;286</span></span></a></td>
+<td><a href="results-eldarica-model-LIA.table.html"><span class="score-cell" data-col-id="model-LIA" data-correct="620" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">620&nbsp;/&nbsp;0&nbsp;/&nbsp;839</span></span></a></td>
+<td><a href="results-eldarica-model-LIA-Arrays.table.html"><span class="score-cell" data-col-id="model-LIA-Arrays" data-correct="1028" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1028&nbsp;/&nbsp;0&nbsp;/&nbsp;1054</span></span></a></td>
+<td><a href="results-eldarica-model-LIA-Lin.table.html"><span class="score-cell" data-col-id="model-LIA-Lin" data-correct="585" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">585&nbsp;/&nbsp;0&nbsp;/&nbsp;984</span></span></a></td>
+<td><a href="results-eldarica-model-LIA-Lin-Arrays.table.html"><span class="score-cell" data-col-id="model-LIA-Lin-Arrays" data-correct="52" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">52&nbsp;/&nbsp;0&nbsp;/&nbsp;115</span></span></a></td>
+<td class="no-data">-</td>
+<td><a href="results-eldarica-model-overall.table.html"><span class="score-cell" data-col-id="model-overall" data-correct="4706" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">4706&nbsp;/&nbsp;0&nbsp;/&nbsp;6744</span></span></a></td>
+</tr>
+<tr><td>golem</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td><a href="results-golem-model-LIA.table.html"><span class="score-cell" data-col-id="model-LIA" data-correct="730" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">730&nbsp;/&nbsp;0&nbsp;/&nbsp;839</span></span></a></td>
+<td class="no-data">-</td>
+<td><a href="results-golem-model-LIA-Lin.table.html"><span class="score-cell" data-col-id="model-LIA-Lin" data-correct="716" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">716&nbsp;/&nbsp;0&nbsp;/&nbsp;984</span></span></a></td>
+<td class="no-data">-</td>
+<td><a href="results-golem-model-LRA-Lin.table.html"><span class="score-cell" data-col-id="model-LRA-Lin" data-correct="80" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">80&nbsp;/&nbsp;0&nbsp;/&nbsp;240</span></span></a></td>
+<td><a href="results-golem-model-overall.table.html"><span class="score-cell" data-col-id="model-overall" data-correct="1526" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1526&nbsp;/&nbsp;0&nbsp;/&nbsp;2063</span></span></a></td>
+</tr>
+<tr class="hors-concours"><td>spacer<br><small class="hc-label">hors concours&nbsp;<i class="info-icon" title="This solver did not officially enter the competition. It was included by the organizers to provide meaningful context for other participants. It is excluded from medal rankings.">i</i></small></td>
+<td><a href="results-spacer-model-ADT-LIA.table.html"><span class="score-cell" data-col-id="model-ADT-LIA" data-correct="33" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">33&nbsp;/&nbsp;0&nbsp;/&nbsp;928</span></span></a></td>
+<td><a href="results-spacer-model-ADT-LIA-Arrays.table.html"><span class="score-cell" data-col-id="model-ADT-LIA-Arrays" data-correct="90" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">90&nbsp;/&nbsp;0&nbsp;/&nbsp;2470</span></span></a></td>
+<td><a href="results-spacer-model-BV.table.html"><span class="score-cell" data-col-id="model-BV" data-correct="3" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">3&nbsp;/&nbsp;0&nbsp;/&nbsp;68</span></span></a></td>
+<td><a href="results-spacer-model-BV-Lin.table.html"><span class="score-cell" data-col-id="model-BV-Lin" data-correct="113" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">113&nbsp;/&nbsp;0&nbsp;/&nbsp;286</span></span></a></td>
+<td><a href="results-spacer-model-LIA.table.html"><span class="score-cell" data-col-id="model-LIA" data-correct="267" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">267&nbsp;/&nbsp;0&nbsp;/&nbsp;839</span></span></a></td>
+<td><a href="results-spacer-model-LIA-Arrays.table.html"><span class="score-cell" data-col-id="model-LIA-Arrays" data-correct="90" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">90&nbsp;/&nbsp;0&nbsp;/&nbsp;1054</span></span></a></td>
+<td><a href="results-spacer-model-LIA-Lin.table.html"><span class="score-cell" data-col-id="model-LIA-Lin" data-correct="608" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">608&nbsp;/&nbsp;0&nbsp;/&nbsp;984</span></span></a></td>
+<td><a href="results-spacer-model-LIA-Lin-Arrays.table.html"><span class="score-cell" data-col-id="model-LIA-Lin-Arrays" data-correct="11" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">11&nbsp;/&nbsp;0&nbsp;/&nbsp;115</span></span></a></td>
+<td><a href="results-spacer-model-LRA-Lin.table.html"><span class="score-cell" data-col-id="model-LRA-Lin" data-correct="130" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">130&nbsp;/&nbsp;0&nbsp;/&nbsp;240</span></span></a></td>
+<td><a href="results-spacer-model-overall.table.html"><span class="score-cell" data-col-id="model-overall" data-correct="1345" data-wrong="0" data-hc="true"><span class="medal"></span><span class="score-value"></span><br><span class="counts">1345&nbsp;/&nbsp;0&nbsp;/&nbsp;6984</span></span></a></td>
+</tr>
+<tr><td>theta</td>
+<td class="no-data">-</td>
+<td class="no-data">-</td>
+<td><a href="results-theta-model-BV.table.html"><span class="score-cell" data-col-id="model-BV" data-correct="0" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">0&nbsp;/&nbsp;0&nbsp;/&nbsp;68</span></span></a></td>
+<td><a href="results-theta-model-BV-Lin.table.html"><span class="score-cell" data-col-id="model-BV-Lin" data-correct="37" data-wrong="5"><span class="medal"></span><span class="score-value"></span><br><span class="counts">37&nbsp;/&nbsp;5&nbsp;/&nbsp;286</span></span></a></td>
+<td><a href="results-theta-model-LIA.table.html"><span class="score-cell" data-col-id="model-LIA" data-correct="0" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">0&nbsp;/&nbsp;0&nbsp;/&nbsp;839</span></span></a></td>
+<td><a href="results-theta-model-LIA-Arrays.table.html"><span class="score-cell" data-col-id="model-LIA-Arrays" data-correct="0" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">0&nbsp;/&nbsp;0&nbsp;/&nbsp;1054</span></span></a></td>
+<td><a href="results-theta-model-LIA-Lin.table.html"><span class="score-cell" data-col-id="model-LIA-Lin" data-correct="587" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">587&nbsp;/&nbsp;0&nbsp;/&nbsp;984</span></span></a></td>
+<td><a href="results-theta-model-LIA-Lin-Arrays.table.html"><span class="score-cell" data-col-id="model-LIA-Lin-Arrays" data-correct="54" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">54&nbsp;/&nbsp;0&nbsp;/&nbsp;115</span></span></a></td>
+<td><a href="results-theta-model-LRA-Lin.table.html"><span class="score-cell" data-col-id="model-LRA-Lin" data-correct="31" data-wrong="0"><span class="medal"></span><span class="score-value"></span><br><span class="counts">31&nbsp;/&nbsp;0&nbsp;/&nbsp;240</span></span></a></td>
+<td><a href="results-theta-model-overall.table.html"><span class="score-cell" data-col-id="model-overall" data-correct="709" data-wrong="5"><span class="medal"></span><span class="score-value"></span><br><span class="counts">709&nbsp;/&nbsp;5&nbsp;/&nbsp;3586</span></span></a></td>
+</tr>
+</table>
+<script>
+window.addEventListener('load', function() {
+  var select = document.getElementById('scoring-mode');
+
+  function calcScore(correct, wrong, mode) {
+    if (mode === 'punish') return correct - 64 * wrong;
+    if (mode === 'assume') return correct + wrong;
+    return correct; // 'ignore'
+  }
+
+  function updateAll() {
+    var mode = select.value;
+
+    // Update score values in every cell
+    document.querySelectorAll('.score-cell').forEach(function(cell) {
+      var correct = parseInt(cell.getAttribute('data-correct'), 10);
+      var wrong   = parseInt(cell.getAttribute('data-wrong'),   10);
+      cell.querySelector('.score-value').textContent = calcScore(correct, wrong, mode);
+    });
+
+    // Build column → [cells] map
+    var colMap = {};
+    document.querySelectorAll('.score-cell').forEach(function(c) {
+      var col = c.getAttribute('data-col-id');
+      if (!colMap[col]) colMap[col] = [];
+      colMap[col].push(c);
+    });
+
+    // Rank per column; hors-concours cells are excluded from ranking
+    var MEDALS = ['\uD83E\uDD47', '\uD83E\uDD48', '\uD83E\uDD49'];
+    Object.keys(colMap).forEach(function(colId) {
+      var cells = colMap[colId];
+      var eligibleScores = cells
+        .filter(function(c) { return c.getAttribute('data-hc') !== 'true'; })
+        .map(function(c) {
+          return calcScore(
+            parseInt(c.getAttribute('data-correct'), 10),
+            parseInt(c.getAttribute('data-wrong'),   10), mode);
+        })
+        .sort(function(a, b) { return b - a; });
+
+      cells.forEach(function(cell) {
+        var medalSpan = cell.querySelector('.medal');
+        if (cell.getAttribute('data-hc') === 'true') {
+          medalSpan.textContent = '';
+          return;
+        }
+        var score = calcScore(
+          parseInt(cell.getAttribute('data-correct'), 10),
+          parseInt(cell.getAttribute('data-wrong'),   10), mode);
+        var rank = eligibleScores.indexOf(score);
+        medalSpan.textContent = (score > 0 && rank >= 0 && rank < 3) ? MEDALS[rank] : '';
+      });
+    });
+  }
+
+  select.addEventListener('change', updateAll);
+  updateAll();
+});
+</script>
+</body></html>
